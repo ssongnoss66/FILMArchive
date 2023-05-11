@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block style %}
+<style>
+  body {
+    margin: 5rem;
+  }
+</style>
+{% endblock style %}
+
+{% block content %}
+<h1>accounts UPDATE</h1>
+<hr>
+<form action="{% url 'accounts:update' %}" method="POST" enctype="multipart/form-data">
+  {% csrf_token %}
+  {% for field in form %}
+  <div class="input-group mb-3">
+    <span class="input-group-text" style = "width: 8rem;" id="{{ field.auto_id }}">{{ field.label }}</span>
+    {{ field }}
+  </div>
+  {% endfor %}
+  <p><a href="{% url 'accounts:password' %}">비밀번호를 변경하려면 클릭하세요</a></p>
+  <div class="d-grid gap-2 mb-2">
+    <input type="submit" class="btn btn-outline-primary">
+  </div>
+</form>
+{% endblock content %}

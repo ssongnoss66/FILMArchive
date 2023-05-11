@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block style %}
+  <style>
+    * {
+      margin: 20px;
+    }
+  </style>
+{% endblock style %}
+{% block content %}
+  <h1>MOVIES</h1>
+  {{ user }}
+  {% if user.is_authenticated %}
+  <a href="{% url 'accounts:profile' user.username %}">PROFILE</a>
+  {% endif %}
+  <a href="{% url 'accounts:login' %}">LOGIN</a>
+  <a href="{% url 'accounts:signup' %}">SIGNUP</a>
+  {% if request.user == user %}
+  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+  <a href="{% url 'accounts:update' %}" class="btn btn-info btn-fill pull-right">내정보수정</a>
+  <a href="{% url 'accounts:delete' %}" class="btn btn-info btn-fill pull-right">회원탈퇴</a>
+  <a href="{% url 'accounts:password' %}" class="btn btn-info btn-fill pull-right">비밀번호 변경</a>
+  <a href="{% url 'accounts:logout' %}" class="btn btn-info btn-fill pull-right">로그아웃</a>
+  <div class="clearfix"></div>
+  </div>
+  {% endif %}
+{% endblock content %}

@@ -1,0 +1,111 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="{% static 'ICON_BLCK.png' %}">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    img {
+      vertical-align: top;
+    }
+
+    .wrap {
+      background: #282828;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .card {
+      width: 500px;
+      height: 420px;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .wrap .bg-img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    {% comment %} .logo{
+      top: 0;
+      left: 0;
+      width: 50%;
+      height: 50%;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    } {% endcomment %}
+    
+    .logo .logo-img {
+      width: 100%;
+      height: auto;
+      transform: translateY(-30px);
+      transition: all 0.5s;
+    }
+    
+    {% comment %} .logo .logo-text {
+      transform: translateX(-40px);
+      transition: all 0.5s;
+      opacity: 0;
+    } {% endcomment %}
+    
+    .card:hover .logo .logo-img {
+      transform: translateY(0px);
+    }
+    {% comment %} .card:hover .logo .logo-text {
+      transform: translateY(0px);
+      opacity: 1;
+    } {% endcomment %}
+  </style>
+  <title>FILMArchive</title>
+</head>
+<body>
+  <dir class="wrap">
+    <img src="{% static 'beach.jpg' %}" class="bg-img" alt="">
+    <div class="card">
+      <a class="logo" href="{% url 'movies:index' %}">
+        <img src="{% static 'ICON_CLR.png' %}" class="logo-img" alt="">
+      </a>
+    </div>
+  </dir>
+  {% comment %} <script>
+    const card = document.querySelector('.card')
+
+    card.addEventListener('mouseenter', (e) => {
+      const bgImg = document.querySelector('.bg-img')
+      // console.log(bgImg);
+      //bgImg.style.transform = 'translate(-50%, -50%) scale(1)'
+      bgImg.style.opacity = '0.5'
+      bgImg.style.transition = 'all 0.5s'
+    })
+    card.addEventListener('mouseleave', (e) => {
+      const bgImg = document.querySelector('.bg-img');
+      bgImg.style.transform = 'translate(-50%, -50%) scale(1.15)';
+      bgImg.style.opacity = '1'
+      bgImg.style.transition = 'all 0.5s';
+    })
+  </script> {% endcomment %}
+</body>
+</html>
