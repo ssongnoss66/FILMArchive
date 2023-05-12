@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block style %}
+<style>
+  body {
+    margin: 5rem;
+  }
+</style>
+{% endblock style %}
+
+{% block content %}
+<h1>movies DETAIL</h1>
+<hr>
+<img src="{{ movie.poster_thumbnail.url }}" alt="">
+<ul>
+  <li>제목 : {{ movie.title }}</li>
+  <li>원제 : {{ movie.original_title }}</li>
+  <li>개봉일 : {{ movie.release_date }}</li>
+  <li>장르 : {{ movie.genre }}</li>
+  <li>국가 : {{ movie.country }}</li>
+  <li>연령 : {{ movie.age }}</li>
+</ul>
+<ul>
+  {% for person in moviepeople %}
+  <li>
+    <img src="{{ person.personphoto_thumbnail.url }}" alt="">
+  </li>
+  <li>이름 : {{ person.person_name }}</li>
+  <li>역할 : {{ person.part }}</li>
+  {% if person.character_name %}
+  <li>캐릭터명 : {{ person.character_name }}</li>
+  {% endif %}
+  <form action="{% url 'movies:person_delete' movie.pk person.pk %}" method="POST">
+    {% csrf_token %}
+    <input type="submit" value="PERSON DELETE" class="btn btn-primary">
+  </form>
+  {% endfor %}
+</ul>
+<form action="{% url 'movies:delete' movie.pk %}" method="POST">
+  {% csrf_token %}
+  <input type="submit" value="DELETE" class="btn btn-primary">
+</form>
+<a href="{% url 'movies:update' movie.pk %}" class="btn btn-primary">UPDATE</a>
+<a href="{% url 'movies:person' movie.pk %}" class="btn btn-primary">PERSON</a>
+{% endblock content %}
