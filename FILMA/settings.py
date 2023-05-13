@@ -36,7 +36,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'movies',
     # 'magazines',
-    # 'reviews',
+    'reviews',
     'accounts',
     'django.contrib.admin',
     'django.contrib.auth',

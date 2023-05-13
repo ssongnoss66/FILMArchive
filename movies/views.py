@@ -1,12 +1,17 @@
 from django.shortcuts import render, redirect
 from .models import Movie, MoviePeople
 from .forms import MovieForm, MoviePeopleForm
+from reviews.models import Review
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 
 # Create your views here.
 def index(request):
-    return render(request, 'movies/index.html')
+    movies = Movie.objects.all()
+    context = {
+        'movies': movies
+    }
+    return render(request, 'movies/index.html', context)
 
 def create(request):
     Movie.objects.all().delete()
@@ -27,9 +32,11 @@ def create(request):
 def detail(request, movie_id):
     movie = Movie.objects.get(pk = movie_id)
     moviepeople = movie.moviepeople_set.all()
+    reviews = Review.objects.filter(movie_id=movie_id)
     context = {
         'movie': movie,
         'moviepeople': moviepeople,
+        'reviews': reviews,
     }
     return render(request, 'movies/detail.html', context)
 

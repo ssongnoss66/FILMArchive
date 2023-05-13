@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block style %}
+<style>
+  body {
+    margin: 5rem;
+  }
+</style>
+{% endblock style %}
+
+{% block content %}
+<h1>reviews UPDATE</h1>
+<hr>
+<form action="{% url 'reviews:update' movie.pk review.pk %}" method="POST">
+  {% csrf_token %}
+  {% for field in update_form %}
+  <div class="input-group mb-3">
+    <span class="input-group-text" style = "width: 13rem;" id="{{ field.auto_id }}">{{ field.label }}</span>
+    {{ field }}
+  </div> 
+  {% endfor %}
+  <div class="d-grid gap-2 mb-2">
+    <input type="submit" class="btn btn-primary" value="UPDATE">
+  </div>
+</form>
+{% endblock content %}

@@ -11,35 +11,60 @@
 {% block content %}
 <h1>movies DETAIL</h1>
 <hr>
-<img src="{{ movie.poster_thumbnail.url }}" alt="">
-<ul>
-  <li>제목 : {{ movie.title }}</li>
-  <li>원제 : {{ movie.original_title }}</li>
-  <li>개봉일 : {{ movie.release_date }}</li>
-  <li>장르 : {{ movie.genre }}</li>
-  <li>국가 : {{ movie.country }}</li>
-  <li>연령 : {{ movie.age }}</li>
-</ul>
-<ul>
+<div class="row">
+  <div class="card mb-3" style="width: 14rem;">
+    <img class="card-img-top" src="{{ movie.poster_thumbnail.url }}" alt="">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">제목 : {{ movie.title }}</li>
+      <li class="list-group-item">원제 : {{ movie.original_title }}</li>
+      <li class="list-group-item">개봉일 : {{ movie.release_date }}</li>
+      <li class="list-group-item">장르 : {{ movie.genre }}</li>
+      <li class="list-group-item">국가 : {{ movie.country }}</li>
+      <li class="list-group-item">연령 : {{ movie.age }}</li>
+    </ul>
+  </div>
   {% for person in moviepeople %}
-  <li>
-    <img src="{{ person.personphoto_thumbnail.url }}" alt="">
-  </li>
-  <li>이름 : {{ person.person_name }}</li>
-  <li>역할 : {{ person.part }}</li>
-  {% if person.character_name %}
-  <li>캐릭터명 : {{ person.character_name }}</li>
-  {% endif %}
-  <form action="{% url 'movies:person_delete' movie.pk person.pk %}" method="POST">
-    {% csrf_token %}
-    <input type="submit" value="PERSON DELETE" class="btn btn-primary">
-  </form>
+  <div class="card mb-3" style="width: 14rem;">
+    <ul class="list-group list-group-flush">
+      <img class="card-img-top" src="{{ person.personphoto_thumbnail.url }}" alt="">
+      <li class="list-group-item">이름 : {{ person.person_name }}</li>
+      <li class="list-group-item">역할 : {{ person.part }}</li>
+      {% if person.character_name %}
+      <li class="list-group-item">캐릭터명 : {{ person.character_name }}</li>
+      {% endif %}
+      <form action="{% url 'movies:person_delete' movie.pk person.pk %}" method="POST">
+        {% csrf_token %}
+        <li class="list-group-item"><input type="submit" value="PERSON DELETE" class="btn btn-primary"></li>
+      </form>
+    </ul>
+  </div>
   {% endfor %}
-</ul>
-<form action="{% url 'movies:delete' movie.pk %}" method="POST">
-  {% csrf_token %}
-  <input type="submit" value="DELETE" class="btn btn-primary">
-</form>
-<a href="{% url 'movies:update' movie.pk %}" class="btn btn-primary">UPDATE</a>
-<a href="{% url 'movies:person' movie.pk %}" class="btn btn-primary">PERSON</a>
+  <div class="d-grid gap-2 d-flex mb-3">
+    <form action="{% url 'movies:delete' movie.pk %}" method="POST">
+      {% csrf_token %}
+      <input type="submit" value="DELETE" class="btn btn-primary">
+    </form>
+    <a href="{% url 'movies:update' movie.pk %}" class="btn btn-primary">UPDATE</a>
+    <a href="{% url 'movies:person' movie.pk %}" class="btn btn-primary">PERSON</a>
+    <a href="{% url 'reviews:create' movie.pk %}" class="btn btn-primary">REVIEW</a>
+  </div>
+  <div class="card">
+    <ul class="list-group list-group-flush">
+      {% for review in reviews %}
+      <li class="list-group-item d-flex justify-content-between align-items-center">{{review.user}} : 
+        <a href="{% url 'reviews:detail' movie.pk review.pk %}">{{review.content}}</a>
+        <span>
+          <a href="{% url 'reviews:update' movie.pk review.pk %}" class="btn btn-primary">UPDATE</a>
+        </span>
+        <span>
+          <form action="{% url 'reviews:delete' movie.pk review.pk %}" method="POST">
+            {% csrf_token %}
+            <input type="submit" value="DELETE" class="btn btn-primary">
+          </form>
+        </span>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
 {% endblock content %}
