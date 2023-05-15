@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block style %}
+<style>
+  body {
+    margin: 5rem;
+  }
+</style>
+{% endblock style %}
+
+{% block content %}
+<h1>magazines DETAIL</h1>
+<hr>
+<div class="row">
+  <div class="card mb-3" style="width: 20rem;">
+    <img class="card-img-top" src="{{ magazine.cover_thumbnail.url }}" alt="">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">제목 : {{ magazine.mgzn_title }}</li>
+      <li class="list-group-item">발행일 : {{ magazine.publish_date }}</li>
+      <li class="list-group-item">공식 사이트 : <a href="{{ magazine.official }}">{{ magazine.official }}</a></li>
+      <li class="list-group-item">구매처 : <a href="{{ magazine.where_to_buy }}">{{ magazine.where_to_buy }}</a></li>
+    </ul>
+  </div>
+  {% for movie in mgzn_movies %}
+  <div class="card mb-3" style="width: 14rem;">
+    <img class="card-img-top" src="{{ movie.poster_thumbnail.url }}" alt="">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">제목 : {{ movie.title }}</li>
+      <li class="list-group-item">원제 : {{ movie.original_title }}</li>
+      <li class="list-group-item">개봉일 : {{ movie.release_date }}</li>
+      <li class="list-group-item">장르 : {{ movie.genre }}</li>
+      <li class="list-group-item">국가 : {{ movie.country }}</li>
+      <li class="list-group-item">연령 : {{ movie.age }}</li>
+    </ul>
+    <form action="{% url 'magazines:mgzn_movie_delete' magazine.pk movie.pk %}" method="POST">
+      {% csrf_token %}
+      <li class="list-group-item"><input type="submit" value="MGZN MOVIE DELETE" class="btn btn-primary"></li>
+    </form>
+  </div>
+  {% endfor %}
+  <div class="d-grid gap-2 d-flex mb-3">
+    <form action="{% url 'magazines:delete' magazine.pk %}" method="POST">
+      {% csrf_token %}
+      <input type="submit" value="DELETE" class="btn btn-primary">
+    </form>
+    <a href="{% url 'magazines:update' magazine.pk %}" class="btn btn-primary">UPDATE</a>
+    <a href="{% url 'magazines:mgzn_movie' magazine.pk %}" class="btn btn-primary">MGZN MOVIE</a>
+  </div>
+</div>
+{% endblock content %}

@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Movie, MoviePeople
+from magazines.models import Magazine
 from .forms import MovieForm, MoviePeopleForm
 from reviews.models import Review
 from django.contrib.auth.decorators import login_required
@@ -8,13 +9,15 @@ from django.http import JsonResponse
 # Create your views here.
 def index(request):
     movies = Movie.objects.all()
+    magazines = Magazine.objects.all()
     context = {
-        'movies': movies
+        'movies': movies,
+        'magazines': magazines,
     }
     return render(request, 'movies/index.html', context)
 
 def create(request):
-    Movie.objects.all().delete()
+    # Movie.objects.all().delete()
     if request.method == 'POST':
         movie_form = MovieForm(request.POST, request.FILES)
         if movie_form.is_valid():
@@ -41,7 +44,9 @@ def detail(request, movie_id):
     return render(request, 'movies/detail.html', context)
 
 def delete(request, movie_id):
-    Movie.objects.get(pk=movie_id).delete()
+    movie = Movie.objects.get(pk=movie_id)
+    if request.user == movie.user:
+        movie.delete()
     return redirect('movies:index')
 
 def update(request, movie_id):

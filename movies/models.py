@@ -48,6 +48,8 @@ country_CHOICES = [
 class Movie(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     title = models.CharField(max_length=50, null=True, blank=True)
+    def __str__(self):
+        return self.title
     original_title = models.CharField(max_length=50, null=True, blank=True)
     rate = models.DecimalField(max_digits=2, decimal_places=1, null=True)
     def image_path(instance, filename):

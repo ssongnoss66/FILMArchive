@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block style %}
+<style>
+  body {
+    margin: 5rem;
+  }
+</style>
+{% endblock style %}
+
+{% block content %}
+<h1>movies PERSON</h1>
+<hr>
+<form action="{% url 'magazines:mgzn_movie' magazine.pk %}" method="POST">
+  {% csrf_token %}
+  {% for field in mgzn_movie_form %}
+  <div class="input-group mb-3">
+    <span class="input-group-text" style = "width: 13rem;" id="{{ field.auto_id }}">{{ field.label }}</span>
+    {{ field }}
+  </div> 
+  {% endfor %}
+  <div class="d-grid gap-2 mb-2">
+    <input type="submit" class="btn btn-primary" value="MGZN MOVIE">
+    <a href="{% url 'movies:create' %}" class="btn btn-info btn-fill pull-right">영화등록</a>
+  </div>
+</form>
+{% endblock content %}

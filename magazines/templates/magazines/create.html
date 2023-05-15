@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block style %}
+<style>
+  body {
+    margin: 5rem;
+  }
+</style>
+{% endblock style %}
+
+{% block content %}
+<h1>magazines CREATE</h1>
+<hr>
+<form action="{% url 'magazines:create' %}" method="POST" enctype="multipart/form-data">
+  {% csrf_token %}
+  {% for field in magazine_form %}
+  <div class="input-group mb-3">
+    <span class="input-group-text" style = "width: 13rem;" id="{{ field.auto_id }}">{{ field.label }}</span>
+    {{ field }}
+  </div> 
+  {% endfor %}
+  <div class="d-grid gap-2 mb-2">
+    <input type="submit" class="btn btn-primary" value="CREATE">
+  </div>
+</form>
+{% endblock content %}
