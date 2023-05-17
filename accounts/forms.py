@@ -4,11 +4,11 @@ from django import forms
 
 class CustomUserCreationForm(UserCreationForm):
     username = forms.CharField(
-        label = 'USERNAME',
+        label = 'ID',
         widget = forms.TextInput(
             attrs = {
                 'class': 'form-control',
-                'placeholder': '유저네임을 입력하세요',
+                'placeholder': '아이디를 입력하세요',
             }
         )
     )
@@ -103,11 +103,11 @@ class CustomUserChangeForm(forms.ModelForm):
 
 class CustomAuthenticationForm(AuthenticationForm):
     username = forms.CharField(
-        label = 'USERNAME',
+        label = 'ID',
         widget = forms.TextInput(
             attrs = {
                 'class': 'form-control',
-                'placeholder': '유저네임을 입력하세요',
+                'placeholder': '아이디를 입력하세요',
             }
         )
     )

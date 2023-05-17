@@ -5,7 +5,7 @@ from imagekit.processors import Thumbnail
 
 # Create your models here.
 class User(AbstractUser):
-    followings = models.ManyToManyField('self', symmetrical=False, related_name='user_followers')
+    followings = models.ManyToManyField('self', symmetrical=False, related_name='followers')
     image = ProcessedImageField(
         null=True,
         blank=True,

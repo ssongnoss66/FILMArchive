@@ -11,10 +11,51 @@
 {% block content %}
 <h1>reviews DETAIL</h1>
 <hr>
-<div class="card">
+<div class="card mb-3">
   <ul class="list-group list-group-flush">
-    <li class="list-group-item d-flex justify-content-between align-items-center">{{review.user}}<span>{{review.created_at}}</span></li>
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      {{ review.user }} {{ review.rate }}점 / 좋아요 {{ review.like_users.all.count }}개
+      <span>
+        <form action="{% url 'reviews:likes' movie.pk review.pk %}" method=="POST">
+          {% csrf_token %}
+          {% if user in review.like_users.all %}
+          <input type="submit" value="NOT LIKE">
+          {% else %}
+          <input type="submit" value="LIKE">
+          {% endif %}
+        </form>
+      </span>
+      <span>{{ review.created_at }}</span>
+    </li>
     <li class="list-group-item d-flex justify-content-between align-items-center">{{review.content}}</li>
   </ul>
 </div>
+<form action="{% url 'reviews:comments' movie.pk review.pk %}" method="POST">
+  {% csrf_token %}
+  {% for field in comment_form %}
+  <div class="input-group mb-3">
+    <span class="input-group-text" style = "width: 13rem;" id="{{ field.auto_id }}">{{ field.label }}</span>
+    {{ field }}
+  </div> 
+  {% endfor %}
+  <div class="d-grid gap-2 mb-2">
+    <input type="submit" class="btn btn-primary" value="CREATE">
+  </div>
+</form>
+<div class="card mb-3">
+  <ul class="list-group list-group-flush">
+    {% for comment in comments %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      {{ comment.user }} : {{ comment.content }}
+      <span>
+        <form action="{% url 'reviews:comment_delete' movie.pk review.pk comment.pk %}" method="POST">
+          {% csrf_token %}
+          <input type="submit" value="DELETE">
+        </form>
+      </span>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+
 {% endblock content %}

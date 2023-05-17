@@ -40,12 +40,14 @@
   </div>
   {% endfor %}
   <div class="d-grid gap-2 d-flex mb-3">
+    {% if magazine.user == user %}
     <form action="{% url 'magazines:delete' magazine.pk %}" method="POST">
       {% csrf_token %}
       <input type="submit" value="DELETE" class="btn btn-primary">
     </form>
     <a href="{% url 'magazines:update' magazine.pk %}" class="btn btn-primary">UPDATE</a>
     <a href="{% url 'magazines:mgzn_movie' magazine.pk %}" class="btn btn-primary">MGZN MOVIE</a>
+    {% endif %}
   </div>
 </div>
 {% endblock content %}

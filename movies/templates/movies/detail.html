@@ -12,7 +12,7 @@
 <h1>movies DETAIL</h1>
 <hr>
 <div class="row">
-  <div class="card mb-3" style="width: 14rem;">
+  <div class="card mb-3" style="width: 15rem;">
     <img class="card-img-top" src="{{ movie.poster_thumbnail.url }}" alt="">
     <ul class="list-group list-group-flush">
       <li class="list-group-item">제목 : {{ movie.title }}</li>
@@ -24,7 +24,7 @@
     </ul>
   </div>
   {% for person in moviepeople %}
-  <div class="card mb-3" style="width: 14rem;">
+  <div class="card mb-3" style="width: 15rem;">
     <ul class="list-group list-group-flush">
       <img class="card-img-top" src="{{ person.personphoto_thumbnail.url }}" alt="">
       <li class="list-group-item">이름 : {{ person.person_name }}</li>
@@ -32,27 +32,41 @@
       {% if person.character_name %}
       <li class="list-group-item">캐릭터명 : {{ person.character_name }}</li>
       {% endif %}
+      {% if movie.user == user %}
       <form action="{% url 'movies:person_delete' movie.pk person.pk %}" method="POST">
         {% csrf_token %}
         <li class="list-group-item"><input type="submit" value="PERSON DELETE" class="btn btn-primary"></li>
       </form>
+      {% endif %}
     </ul>
   </div>
   {% endfor %}
   <div class="d-grid gap-2 d-flex mb-3">
+    {% if movie.user == user %}
     <form action="{% url 'movies:delete' movie.pk %}" method="POST">
       {% csrf_token %}
       <input type="submit" value="DELETE" class="btn btn-primary">
     </form>
     <a href="{% url 'movies:update' movie.pk %}" class="btn btn-primary">UPDATE</a>
     <a href="{% url 'movies:person' movie.pk %}" class="btn btn-primary">PERSON</a>
+    {% else %}
     <a href="{% url 'reviews:create' movie.pk %}" class="btn btn-primary">REVIEW</a>
+    <form action="{% url 'movies:wish' movie.pk %}" method=="POST">
+      {% csrf_token %}
+      {% if user in movie.wish_users.all %}
+      <input type="submit" value="NOT WISH" class="btn btn-primary">
+      {% else %}
+      <input type="submit" value="WISH" class="btn btn-primary">
+      {% endif %}
+    </form>
+    {% endif %}
   </div>
   <div class="card">
     <ul class="list-group list-group-flush">
       {% for review in reviews %}
-      <li class="list-group-item d-flex justify-content-between align-items-center">{{review.user}} : 
+      <li class="list-group-item d-flex justify-content-between align-items-center"><a href="{% url 'accounts:profile' review.user.username %}">{{review.user}}</a> : 
         <a href="{% url 'reviews:detail' movie.pk review.pk %}">{{review.content}}</a>
+        {% if review.user == user %}
         <span>
           <a href="{% url 'reviews:update' movie.pk review.pk %}" class="btn btn-primary">UPDATE</a>
         </span>
@@ -62,6 +76,7 @@
             <input type="submit" value="DELETE" class="btn btn-primary">
           </form>
         </span>
+        {% endif %}
       </li>
       {% endfor %}
     </ul>

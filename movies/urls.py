@@ -10,8 +10,8 @@ urlpatterns = [
     path('<int:movie_id>/update', views.update, name='update'),
     path('<int:movie_id>/person/', views.person, name='person'),
     path('<int:movie_id>/person/<int:person_id>/delete/', views.person_delete, name='person_delete'),
-    # path('<int:movie_id>/wish/', views.wish, name='wish'),
-    # path('genre/<str:genre>', views.genre, name='genre'),
-    # path('country/<str:country>', views.country, name='country'),
-    # path('magazine/<int:magazine_id>', views.magazine, name='magazine'),
+    path('<int:movie_id>/wish/', views.wish, name='wish'),
+    path('genre/<str:genre>', views.genre, name='genre'),
+    path('country/<str:country>', views.country, name='country'),
+    path('magazine/<int:magazine_id>', views.magazine, name='magazine'),
 ]

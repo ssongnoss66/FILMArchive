@@ -12,6 +12,7 @@ def create(request, movie_id):
             review=review_form.save(commit=False)
             review.user = request.user
             review.movie = movie
+            review.rate = request.POST.get('rate')
             review.save()
             return redirect('movies:detail', movie.pk)
     else:
@@ -23,9 +24,15 @@ def create(request, movie_id):
     return render(request, 'reviews/create.html', context)
 
 def detail(request, movie_id, review_id):
+    movie = Movie.objects.get(pk=movie_id)
     review = Review.objects.get(pk=review_id)
+    comments = review.comment_set.all()
+    comment_form = CommentForm()
     context = {
         'review': review,
+        'movie': movie,
+        'comment_form': comment_form,
+        'comments': comments,
     }
     return render(request, 'reviews/detail.html', context)
 
@@ -51,3 +58,34 @@ def update(request, movie_id, review_id):
         'review': review,
     }
     return render(request, 'reviews/update.html', context)
+
+def likes(request, movie_id, review_id):
+    movie = Movie.objects.get(pk=movie_id)
+    review = Review.objects.get(pk=review_id)
+    if request.user in review.like_users.all():
+        review.like_users.remove(request.user)
+    else:
+        review.like_users.add(request.user)
+    return redirect('reviews:detail', movie.pk, review.pk)
+
+def comments(request, movie_id, review_id):
+    movie = Movie.objects.get(pk=movie_id)
+    review = Review.objects.get(pk=review_id)
+    comment_form = CommentForm(request.POST)
+    if comment_form.is_valid():
+        comment = comment_form.save(commit=False)
+        comment.user = request.user
+        comment.review = review
+        comment.save()
+        return redirect('reviews:detail', movie_id=movie_id, review_id=review_id)
+    context = {
+        'comment_form': comment_form,
+        'movie': movie,
+    }
+    return render(request, 'reviews/detail.html', context)
+
+def comment_delete(request, movie_id, review_id, comment_id):
+    movie = Movie.objects.get(pk=movie_id)
+    review = Review.objects.get(pk=review_id)
+    Comment.objects.get(pk=comment_id).delete()
+    return redirect('reviews:detail', movie.pk, review.pk)
