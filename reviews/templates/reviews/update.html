@@ -9,8 +9,6 @@
 {% endblock style %}
 
 {% block content %}
-<h1>reviews UPDATE</h1>
-<hr>
 <form action="{% url 'reviews:update' movie.pk review.pk %}" method="POST">
   {% csrf_token %}
   {% for field in update_form %}

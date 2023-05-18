@@ -9,8 +9,6 @@
 {% endblock style %}
 
 {% block content %}
-<h1>movies PERSON</h1>
-<hr>
 <form action="{% url 'magazines:mgzn_movie' magazine.pk %}" method="POST">
   {% csrf_token %}
   {% for field in mgzn_movie_form %}

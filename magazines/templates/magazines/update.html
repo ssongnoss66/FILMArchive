@@ -9,8 +9,6 @@
 {% endblock style %}
 
 {% block content %}
-<h1>magazines CREATE</h1>
-<hr>
 <form action="{% url 'magazines:update' magazine.pk %}" method="POST" enctype="multipart/form-data">
   {% csrf_token %}
   {% for field in update_form %}

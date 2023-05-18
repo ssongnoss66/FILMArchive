@@ -9,8 +9,6 @@
 {% endblock style %}
 
 {% block content %}
-<h1>accounts UPDATE</h1>
-<hr>
 <form action="{% url 'accounts:update' %}" method="POST" enctype="multipart/form-data">
   {% csrf_token %}
   {% for field in form %}

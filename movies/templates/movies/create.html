@@ -9,8 +9,6 @@
 {% endblock style %}
 
 {% block content %}
-<h1>movies CREATE</h1>
-<hr>
 <form action="{% url 'movies:create' %}" method="POST" enctype="multipart/form-data">
   {% csrf_token %}
   {% for field in movie_form %}

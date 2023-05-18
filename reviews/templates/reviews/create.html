@@ -44,9 +44,6 @@
 {% endblock style %}
 
 {% block content %}
-<h1>reviews CREATE</h1>
-<hr>
-
 <form action="{% url 'reviews:create' movie.pk %}" name="myform" id="myform" method="POST">
   {% csrf_token %}
   {% for field in review_form %}

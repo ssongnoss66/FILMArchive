@@ -15,7 +15,7 @@
 
       a {
         text-decoration-line: none;
-        color: black;
+        color: #3aa159;
       }
 
       .navbar-brand {
@@ -88,7 +88,7 @@
         <div class="collapse navbar-collapse" id="navbarScroll">
           <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">영화</a>
+              <a class="nav-link active" aria-current="page" href="{% url 'movies:every_movies' %}">영화</a>
             </li>
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -125,13 +125,13 @@
           </ul>
           <ul class="nav__personal navbar-nav ms-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
             {% if user.is_authenticated %}
-            <li class="nav__personal-item"><a href="{% url 'accounts:profile' user.username %}">PROFILE</a></li>
+            <li class="nav__personal-item"><a href="{% url 'accounts:profile' user.username %}">프로필</a></li>
             <li class="nav__personal-item"><a href="{% url 'accounts:update' %}">내정보수정</a></li>
             <li class="nav__personal-item"><a href="{% url 'accounts:logout' %}">로그아웃</a></li>
             <li class="nav__personal-item"><a href="{% url 'accounts:delete' %}">회원탈퇴</a></li>
             {% else %}
-            <li class="nav__personal-item"><a href="{% url 'accounts:login' %}">LOGIN</a></li>
-            <li class="nav__personal-item"><a href="{% url 'accounts:signup' %}">SIGNUP</a></li>
+            <li class="nav__personal-item"><a href="{% url 'accounts:login' %}">로그인</a></li>
+            <li class="nav__personal-item"><a href="{% url 'accounts:signup' %}">회원가입</a></li>
             {% endif %}
           </ul>
         </div>

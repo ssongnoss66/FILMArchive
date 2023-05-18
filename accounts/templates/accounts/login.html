@@ -9,8 +9,6 @@
 {% endblock style %}
 
 {% block content %}
-<h1>accounts LOGIN</h1>
-<hr>
 <form action="{% url 'accounts:login' %}" method = "POST">
   {% csrf_token %}
   {% for field in form %}

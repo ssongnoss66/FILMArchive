@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block style %}
-  <link rel="stylesheet" href="{% static 'movies/css/country_style.css' %}">
+  <link rel="stylesheet" href="{% static 'movies/css/genre_style.css' %}">
 {% endblock style %}
 
 {% block content %}
@@ -39,8 +39,8 @@
           }
         </script>
       </h5>
-      <h1 class="mt-3">베스트 {{ country }} 영화 </h1>
-      {% comment %} <h4 class="mt-3 mb-4">"{{ country }}에 갈 곳 많아도 식후경이지!"</h4> {% endcomment %}
+      <h1 class="mt-3">베스트 영화</h1>
+      {% comment %} <h4 class="mt-3 mb-4">"{{ genre }}에 갈 곳 많아도 식후경이지!"</h4> {% endcomment %}
     </div>
   </header>
   {% for movie in movies %}

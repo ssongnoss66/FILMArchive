@@ -44,7 +44,6 @@
     </div>
   </header>
   {% for movie in movies %}
-    {% if movie.rate is not NONE %}
     <div class="container">
       <div class="row justify-content-center mt-3 mb-3">
         <div class="col-12 col-lg-3">
@@ -91,7 +90,6 @@
       </div>
       <hr class="divider w-100">
     </div>
-    {% endif %}
   {% endfor %}
 {% endblock content %}
 

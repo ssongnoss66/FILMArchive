@@ -14,4 +14,5 @@ urlpatterns = [
     path('genre/<str:genre>', views.genre, name='genre'),
     path('country/<str:country>', views.country, name='country'),
     path('magazine/<int:magazine_id>', views.magazine, name='magazine'),
+    path('every_movies/', views.every_movies, name='every_movies'),
 ]

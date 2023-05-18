@@ -6,6 +6,7 @@ from reviews.models import Review
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.db.models import Count, Avg, Q
+import itertools
 
 # Create your views here.
 def index(request):
@@ -15,9 +16,10 @@ def index(request):
         if movie.avg_rate:
             movie.rate = round(movie.avg_rate, 1)
             movie.save()
+    movies = Movie.objects.all()
     movies_rate = Movie.objects.filter(rate__isnull=False).order_by('-rate')
     movies_country = Movie.objects.all().order_by('country')
-    movies_genre = Movie.objects.all().order_by('genre')
+    movies_genre = movies.order_by('genre')
     movies_new = Movie.objects.all().order_by('-created_at')
     magazines = Magazine.objects.all()
     
@@ -27,6 +29,7 @@ def index(request):
         'movies_country': movies_country,
         'movies_rate': movies_rate,
         'movies_new': movies_new,
+        'movies': movies,
     }
     return render(request, 'movies/index.html', context)
 
@@ -170,11 +173,11 @@ def country(request, country):
 def magazine(request, magazine_id):
     magazine = Magazine.objects.get(pk=magazine_id)
     movies_all = magazine.magazinemovie_set.all()
-    movies = [movie.movie for movie in movies_all]
+    movies_raw = [movie.movie for movie in movies_all]
+    movies = sorted(movies_raw, key=lambda movie: movie.rate, reverse=True)  # Sort movies by rate
     movies_country = Movie.objects.all().order_by('country')
     movies_genre = Movie.objects.all().order_by('genre')
     magazines = Magazine.objects.all()
-    
     context = {
         'magazines': magazines,
         'movies_genre': movies_genre,
@@ -183,3 +186,16 @@ def magazine(request, magazine_id):
         'magazine': magazine,
     }
     return render(request, 'movies/magazine.html', context)
+
+def every_movies(request):
+    movies = Movie.objects.all().order_by('-rate')
+    movies_country = Movie.objects.all().order_by('country')
+    movies_genre = Movie.objects.all().order_by('genre')
+    magazines = Magazine.objects.all()
+    context = {
+        'magazines': magazines,
+        'movies_genre': movies_genre,
+        'movies_country': movies_country,
+        'movies': movies,
+    }
+    return render(request, 'movies/every_movies.html', context)
