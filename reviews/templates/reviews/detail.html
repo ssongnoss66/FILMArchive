@@ -9,27 +9,26 @@
 {% endblock style %}
 
 {% block content %}
-<h1>reviews DETAIL</h1>
-<hr>
 <div class="card mb-3">
   <ul class="list-group list-group-flush">
     <li class="list-group-item d-flex justify-content-between align-items-center">
+      <div class="d-flex gap-2 align-items-center">
       {{ review.user }} {{ review.rate }}점 / 좋아요 {{ review.like_users.all.count }}개
-      <span>
-        <form action="{% url 'reviews:likes' movie.pk review.pk %}" method=="POST">
-          {% csrf_token %}
-          {% if user in review.like_users.all %}
-          <input type="submit" value="NOT LIKE">
-          {% else %}
-          <input type="submit" value="LIKE">
-          {% endif %}
-        </form>
-      </span>
+      <form action="{% url 'reviews:likes' movie.pk review.pk %}" method=="POST">
+        {% csrf_token %}
+        {% if user in review.like_users.all %}
+        <input type="submit" class="btn" value="NOT LIKE">
+        {% else %}
+        <input type="submit" class="btn" value="LIKE">
+        {% endif %}
+      </form>
+      </div>
       <span>{{ review.created_at }}</span>
     </li>
     <li class="list-group-item d-flex justify-content-between align-items-center">{{review.content}}</li>
   </ul>
 </div>
+{% if user.is_authenticated %}
 <form action="{% url 'reviews:comments' movie.pk review.pk %}" method="POST">
   {% csrf_token %}
   {% for field in comment_form %}
@@ -38,20 +37,23 @@
     {{ field }}
   </div> 
   {% endfor %}
-  <div class="d-grid gap-2 mb-2">
-    <input type="submit" class="btn btn-primary" value="CREATE">
+  <div class="d-grid gap-2 mb-3">
+    <input type="submit" class="btn" value="CREATE">
   </div>
 </form>
+{% endif %}
 <div class="card mb-3">
   <ul class="list-group list-group-flush">
     {% for comment in comments %}
     <li class="list-group-item d-flex justify-content-between align-items-center">
       {{ comment.user }} : {{ comment.content }}
       <span>
+        {% if comment.user == request.user %}
         <form action="{% url 'reviews:comment_delete' movie.pk review.pk comment.pk %}" method="POST">
           {% csrf_token %}
           <input type="submit" value="DELETE">
         </form>
+        {% endif %}
       </span>
     </li>
     {% endfor %}

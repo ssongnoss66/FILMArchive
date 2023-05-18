@@ -2,8 +2,10 @@ from django.shortcuts import render, redirect
 from .models import Review, Comment
 from .forms import ReviewForm, CommentForm
 from movies.models import Movie
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
+@login_required
 def create(request, movie_id):
     movie = Movie.objects.get(pk = movie_id)
     if request.method == "POST":
@@ -59,6 +61,7 @@ def update(request, movie_id, review_id):
     }
     return render(request, 'reviews/update.html', context)
 
+@login_required
 def likes(request, movie_id, review_id):
     movie = Movie.objects.get(pk=movie_id)
     review = Review.objects.get(pk=review_id)

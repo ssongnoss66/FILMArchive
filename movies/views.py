@@ -16,16 +16,17 @@ def index(request):
             movie.rate = round(movie.avg_rate, 1)
             movie.save()
     movies_rate = Movie.objects.filter(rate__isnull=False).order_by('-rate')
-    movies_genre = Movie.objects.all().order_by('genre')
     movies_country = Movie.objects.all().order_by('country')
     movies_genre = Movie.objects.all().order_by('genre')
+    movies_new = Movie.objects.all().order_by('-created_at')
     magazines = Magazine.objects.all()
     
     context = {
-        'movies_rate': movies_rate,
         'magazines': magazines,
         'movies_genre': movies_genre,
         'movies_country': movies_country,
+        'movies_rate': movies_rate,
+        'movies_new': movies_new,
     }
     return render(request, 'movies/index.html', context)
 
@@ -40,7 +41,13 @@ def create(request):
             return redirect('movies:detail', movie.pk)
     else:
         movie_form = MovieForm()
+        movies_country = Movie.objects.all().order_by('country')
+        movies_genre = Movie.objects.all().order_by('genre')
+        magazines = Magazine.objects.all()
     context = {
+        'magazines': magazines,
+        'movies_genre': movies_genre,
+        'movies_country': movies_country,
         'movie_form': movie_form
     }
     return render(request, 'movies/create.html', context)
@@ -49,7 +56,13 @@ def detail(request, movie_id):
     movie = Movie.objects.get(pk = movie_id)
     moviepeople = movie.moviepeople_set.all()
     reviews = Review.objects.filter(movie_id=movie_id)
+    movies_country = Movie.objects.all().order_by('country')
+    movies_genre = Movie.objects.all().order_by('genre')
+    magazines = Magazine.objects.all()
     context = {
+        'magazines': magazines,
+        'movies_genre': movies_genre,
+        'movies_country': movies_country,
         'movie': movie,
         'moviepeople': moviepeople,
         'reviews': reviews,
@@ -73,7 +86,13 @@ def update(request, movie_id):
             return redirect('movies:detail', movie.pk)
     else:
         update_form = MovieForm(instance=movie)
+        movies_country = Movie.objects.all().order_by('country')
+        movies_genre = Movie.objects.all().order_by('genre')
+        magazines = Magazine.objects.all()
     context = {
+        'magazines': magazines,
+        'movies_genre': movies_genre,
+        'movies_country': movies_country,
         'update_form': update_form,
         'movie': movie,
     }
@@ -90,7 +109,13 @@ def person(request, movie_id):
             return redirect('movies:detail', movie.pk)
     else:
         person_form = MoviePeopleForm()
+        movies_country = Movie.objects.all().order_by('country')
+        movies_genre = Movie.objects.all().order_by('genre')
+        magazines = Magazine.objects.all()
     context = {
+        'magazines': magazines,
+        'movies_genre': movies_genre,
+        'movies_country': movies_country,
         'person_form': person_form,
         'movie': movie,
     }
@@ -103,6 +128,7 @@ def person_delete(request, movie_id, person_id):
         person.delete()
     return redirect('movies:detail', movie.pk)
 
+@login_required
 def wish(request, movie_id):
     movie = Movie.objects.get(pk=movie_id)
     if request.user in movie.wish_users.all():
@@ -113,7 +139,14 @@ def wish(request, movie_id):
 
 def genre(request, genre):
     movies = Movie.objects.filter(genre = genre).order_by('-rate')
+    movies_country = Movie.objects.all().order_by('country')
+    movies_genre = Movie.objects.all().order_by('genre')
+    magazines = Magazine.objects.all()
+    
     context = {
+        'magazines': magazines,
+        'movies_genre': movies_genre,
+        'movies_country': movies_country,
         'movies': movies,
         'genre': genre,
     }
@@ -121,7 +154,14 @@ def genre(request, genre):
 
 def country(request, country):
     movies = Movie.objects.filter(country = country).order_by('-rate')
+    movies_country = Movie.objects.all().order_by('country')
+    movies_genre = Movie.objects.all().order_by('genre')
+    magazines = Magazine.objects.all()
+    
     context = {
+        'magazines': magazines,
+        'movies_genre': movies_genre,
+        'movies_country': movies_country,
         'movies': movies,
         'country': country,
     }
@@ -131,7 +171,14 @@ def magazine(request, magazine_id):
     magazine = Magazine.objects.get(pk=magazine_id)
     movies_all = magazine.magazinemovie_set.all()
     movies = [movie.movie for movie in movies_all]
+    movies_country = Movie.objects.all().order_by('country')
+    movies_genre = Movie.objects.all().order_by('genre')
+    magazines = Magazine.objects.all()
+    
     context = {
+        'magazines': magazines,
+        'movies_genre': movies_genre,
+        'movies_country': movies_country,
         'movies': movies,
         'magazine': magazine,
     }

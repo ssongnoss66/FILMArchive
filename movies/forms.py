@@ -34,6 +34,7 @@ class MovieForm(forms.ModelForm):
         label = '개봉일',
         widget = forms.DateInput(
             attrs = {
+                'class': 'form-control',
                 'type': 'date'
             }
         ),

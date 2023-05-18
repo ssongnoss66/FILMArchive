@@ -1,78 +1,84 @@
 {% extends 'base.html' %}
 
 {% block style %}
-  <style>
-    body {
-      margin: 20px;
-    }
-  </style>
+  .h3__title {
+    font-weight: 900;
+  }
+
+  .group__card {
+    background-color: grey;
+  }
 {% endblock style %}
+
 {% block content %}
-  <h1>movies INDEX</h1>
-  <h3>{{ user }}</h3>
-  {% if user.is_authenticated %}
-  <p><a href="{% url 'accounts:profile' user.username %}">PROFILE</a></p>
-  {% endif %}
-  <p><a href="{% url 'accounts:login' %}">LOGIN</a></p>
-  <p><a href="{% url 'accounts:signup' %}">SIGNUP</a></p>
-  {% if request.user == user %}
-  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-    <a href="{% url 'movies:create' %}" class="btn btn-info btn-fill pull-right">영화등록</a>
-    <a href="{% url 'magazines:create' %}" class="btn btn-info btn-fill pull-right">잡지등록</a>
-    <a href="{% url 'accounts:update' %}" class="btn btn-info btn-fill pull-right">내정보수정</a>
-    <a href="{% url 'accounts:delete' %}" class="btn btn-info btn-fill pull-right">회원탈퇴</a>
-    <a href="{% url 'accounts:password' %}" class="btn btn-info btn-fill pull-right">비밀번호 변경</a>
-    <a href="{% url 'accounts:logout' %}" class="btn btn-info btn-fill pull-right">로그아웃</a>
+  <div class="mb-3">
+    {% if user.is_authenticated %}
+    <h3 class="h3__title">{{ user }}님 환영합니다!</h3>
+    <div class="justify-content-end">
+      <a href="{% url 'movies:create' %}" class="btn btn-fill pull-right">영화등록</a>
+      <a href="{% url 'magazines:create' %}" class="btn btn-fill pull-right">잡지등록</a>
+    </div>
+    {% else %}
+    <h3 class="h3__title">로그인하고 필마카이브의 다양한 서비스를 경험하세요!</h3>
+    {% endif %}
   </div>
-  {% endif %}
-  <div class="row">
-    <h2>평점이 높은 영화</h2>
+  <div class="row gap-3">
+    <h3 class="h3__title">평점이 높은 영화</h3>
     {% for movie in movies_rate %}
-    <div class="card mb-3" style="width: 15rem;">
-      <img class="card-img-top" src="{{ movie.poster_thumbnail.url }}" alt="">
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item">제목 : <a href="{% url 'movies:detail' movie.pk %}">{{ movie.title }}</a></li>
-        <li class="list-group-item">개봉연도 : {{ movie.release_date.year }}</li>
-      </ul>
+    <div class="card mb-3" style="width: 15rem; padding: 0;">
+      <a href="{% url 'movies:detail' movie.pk %}">
+        <img class="card-img-top rounded" src="{{ movie.poster_thumbnail.url }}" alt="">
+        <p class="m-0">{{ movie.title }}</p>
+        <p class="m-0">{{ movie.release_date.year }} ・ {{ movie.country }}</p>
+        <p class="m-0" style="font-size: small; color: grey;">평균 ★{{ movie.rate }}</p>
+      </a>
     </div>
     {% endfor %}
   </div>
 
-  <div class="row">
-    <h2>장르별 영화</h2>
+  <div class="row gap-3">
+    <h3 class="h3__title">새로 등록된 영화</h3>
+    {% for movie in movies_new %}
+    <div class="card mb-3" style="width: 15rem; padding: 0;">
+      <a href="{% url 'movies:detail' movie.pk %}">
+        <img class="card-img-top rounded" src="{{ movie.poster_thumbnail.url }}" alt="">
+        <p class="m-0">{{ movie.title }}</p>
+        <p class="m-0">{{ movie.release_date.year }} ・ {{ movie.country }}</p>
+        {% if movie.rate %}
+        <p class="m-0" style="font-size: small; color: red;">평균 ★{{ movie.rate }}</p>
+        {% else %}
+        <p class="m-0" style="font-size: small; color: grey;">평가 없음</p>
+        {% endif %}
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="row gap-3">
+    <h3 class="h3__title">장르별 영화</h3>
     {% regroup movies_genre by genre as genre_list %}
     {% for genre in genre_list %}
-    <div class="card mb-3" style="width: 15rem;">
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item"><a href="{% url 'movies:genre' genre.grouper %}">{{ genre.grouper }}</a></li>
-      </ul>
+    <div class="card group__card mb-3" style="width: 15rem;">
+      <p><a href="{% url 'movies:genre' genre.grouper %}">{{ genre.grouper }}</a></p>
     </div>
     {% endfor %}
   </div>
 
-  <div class="row">
-    <h2>국가별 영화</h2>
+  <div class="row gap-3">
+    <h3 class="h3__title">국가별 영화</h3>
     {% regroup movies_country by country as country_list %}
     {% for country in country_list %}
-    <div class="card mb-3" style="width: 15rem;">
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item"><a href="{% url 'movies:country' country.grouper %}">{{ country.grouper }}</a></li>
-      </ul>
+    <div class="card group__card mb-3" style="width: 15rem;">
+      <p><a href="{% url 'movies:country' country.grouper %}">{{ country.grouper }}</a></p>
     </div>
     {% endfor %}
   </div>
 
-  <div class="row">
-    <h2>잡지별 영화</h2>
+  <div class="row gap-3">
+    <h3 class="h3__title">잡지별 영화</h3>
     {% for magazine in magazines %}
-    <div class="card mb-3" style="width: 15rem;">
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item">
-          <a href="{% url 'movies:magazine' magazine.pk %}">
-            {{ magazine.mgzn_title }}
-          </a>
-        </li>
-      </ul>
+    <div class="card group__card mb-3" style="width: 15rem;">
+      <p><a href="{% url 'movies:magazine' magazine.pk %}">{{ magazine.mgzn_title }}</a></p>
     </div>
     {% endfor %}
   </div>
