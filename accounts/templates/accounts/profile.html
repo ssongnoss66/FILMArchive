@@ -2,71 +2,61 @@
 
 {% block style %}
 <style>
-  body {
-    margin: 5rem;
-  }
 </style>
 {% endblock style %}
 
 {% block content %}
-<div class="content mt-5">
-    <div class="container">
-        <div class="row justify-content-center">
-
-            <div class="col-auto">
-                <div class="card card-user text-center" style="padding:2rem; text-align: center; border: 0;">
-                    <div class="image text-center">
-                        {% if person.image %}
-                        <img class="profileimage" src="{{ person.image.url }}" alt="이미지">
-                        {% else %}
-                        {% endif %}
-                    </div>
-                    <div class="content">
-                        <div class="author">
-                              <h4 class="title"></br>
-                              </h4>
-                              <h4 class="title mb-5">{{ person.username }}</br>
-                              </h4>
-                        <p class="description text-center"> 
-                        </p>
-                    </div>
-                    {% comment %} <hr>
-                    <div class="text-center">
-                        <button type="button" onclick="window.open('https://www.facebook.com');" class="btn btn-simple"><i class="fa fa-facebook-square">facebook</i></button>
-                        <button href="button" onclick="window.open('https://www.twitter.com');"class="btn btn-simple"><i class="fa fa-twitter">twitter</i></button>
-                        <button href="button" onclick="window.open('https://www.google.com');"class="btn btn-simple"><i class="fa fa-google-plus-square">google</i></button>
-
-                    </div> {% endcomment %}
-                </div>
-            </div>
-
-            <div class="col-auto">
-                <div class="card mb-5" style="padding:2rem;">
-                    <div class="content">
-                        <p>ID : {{ person.username }}</p>
-                        <p>이름 : {{ person.name }}</p>
-                        <p>이메일 : {{ person.email }}</p>
-                        {% if request.user == person %}
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <a href="{% url 'accounts:update' %}" class="btn btn-info btn-fill pull-right">내정보수정</a>
-                        <a href="{% url 'accounts:delete' %}" class="btn btn-info btn-fill pull-right">회원탈퇴</a>
-                        <a href="{% url 'accounts:password' %}" class="btn btn-info btn-fill pull-right">비밀번호 변경</a>
-                        <a href="{% url 'accounts:logout' %}" class="btn btn-info btn-fill pull-right">로그아웃</a>
-                        {% else %}
-                        <form action="{% url 'accounts:follow' person.pk %}" method=="POST">
-                            {% csrf_token %}
-                            {% if request.user in person.followers.all %}
-                                <input type="submit" value="UnFollow" class="btn btn-info btn-fill pull-right">
-                            {% else %}
-                                <input type="submit" value="Follow" class="btn btn-info btn-fill pull-right">
-                            {% endif %}
-                        </form>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-
-        </div>
+<div class="card text-center">
+    <div class="card-header">
+        {{ person.username }}님의 정보
+    </div>
+    <div class="card-body">
+        <img class="card-img-top" src="{{ person.image.url }}" alt="" style="width:150px; border-radius: 50%; border:5px solid var(--main-mango); padding: 0px;">
+        <h5 class="card-title mt-2">{{ person.last_name }}{{ person.first_name }}</h5>
+        <form id="follow-form" data-user-id="{{ person.pk }}">
+            {% csrf_token %}
+            {% if request.user in person.followers.all %}
+                <input type="submit" value="UnFollow" class="btn btn-info btn-fill pull-right">
+            {% else %}
+                <input type="submit" value="Follow" class="btn btn-info btn-fill pull-right">
+            {% endif %}
+        </form>
+        {% for review in reviews %}
+        <p class="card-text mt-2">
+            <a href="{% url 'movies:detail' review.movie.id %}">{{ review.movie.title }}</a>
+        {{ review.content }}
+            {{ review.content }}
+        </p>
+        {% endfor %}
+    </div>
+    <div class="card-footer text-body-secondary">
+        {{ rev_nums }}개의 리뷰를 작성하였습니다.
     </div>
 </div>
 {% endblock content %}
+
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+    const form = document.querySelector('#follow-form')
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value
+    form.addEventListener('submit', function (event) {
+        event.preventDefault()
+        const userId = event.target.dataset.userId
+        axios({
+            method: 'post',
+            url: `/accounts/${userId}/follow/`,
+            headers: {'X-CSRFToken': csrftoken,}
+        })
+            .then((response) => {
+                const isFollowed = response.data.is_followed
+                const followBtn = document.querySelector('#follow-form > input[type=submit]')
+                if (isFollowed ===true) {
+                    followBtn.value = 'UnFollow'
+                } else {
+                    followBtn.value = 'Follow'
+                }
+            })
+    })
+</script>
+{% endblock script %}

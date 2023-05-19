@@ -39,7 +39,7 @@
           }
         </script>
       </h5>
-      <h1 class="mt-3">
+      <h1 class="mt-3 mb-5">
         <a href="{% url 'magazines:detail' magazine.pk %}">{{ magazine.mgzn_title }}</a>에 실린 영화
       </h1>
       {% comment %} <h4 class="mt-3 mb-4">"{{ magazine }}에 갈 곳 많아도 식후경이지!"</h4> {% endcomment %}
@@ -63,7 +63,9 @@
               <h5>{{ movie.release_date }}</h5>
             </div>
             <div class="info__second text-end col-2">
-              <form action="{% url 'movies:wish' movie.pk %}" method="POST">
+              {% if movie.user == user %}
+              {% else %}
+              <form action="{% url 'movies:grouper_wsh' movie.pk %}" method="POST">
                 {% csrf_token %}
                 {% if request.user in movie.wish_users.all %}
                   <input type="submit" value="NOT WISH" class="btn btn-primary">
@@ -71,6 +73,7 @@
                   <input type="submit" value="WISH" class="btn btn-primary">
                 {% endif %}
               </form>
+              {% endif %}
               {% comment %} <form id="wish-form" data-movie-id="{{ movie.pk }}">
                 {% csrf_token %}
                 {% if request.user in movie.wish_users.all %}

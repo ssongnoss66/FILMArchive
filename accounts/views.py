@@ -4,6 +4,10 @@ from django.contrib.auth import login as auth_login, logout as auth_logout, get_
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from .models import User
+from reviews.models import Review
+from movies.models import Movie
+from django.db.models import Count
+from django.http import JsonResponse
 
 def login(request):
     if request.user.is_authenticated:
@@ -78,8 +82,14 @@ def password(request):
 
 def profile(request, username):
     person = User.objects.get(username=username)
+    reviews = Review.objects.filter(user_id = person.pk)
+    rev_nums = reviews.count()
+    movies = Movie.objects.all()
     context = {
         'person': person,
+        'reviews': reviews,
+        'movies': movies,
+        'rev_nums': rev_nums,
     }
     return render(request, 'accounts/profile.html', context)
 
@@ -91,6 +101,12 @@ def follow(request, user_id):
     if you != me:
         if me in you.followers.all():
             you.followers.remove(me)
+            is_followed = False
         else:
             you.followers.add(me)
+            is_followed = True
+        context = {
+            'is_followed': is_followed,
+        }
+        return JsonResponse(context)
     return redirect('accounts:profile', you.username)

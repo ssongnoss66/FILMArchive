@@ -1,22 +1,42 @@
 {% extends 'base.html' %}
+{% load static %}
+{% block nav_bg %}
+position: relative;
+
+/* The image used */
+color: white;
+background-image: url({{ first_moviephoto }});
+
+min-height: 380px;
+
+/* Center and scale the image nicely */
+background-position: top;
+background-repeat: no-repeat;
+background-size: cover;
+
+/* Needed to position the navbar */
+position: relative;
+{% endblock nav_bg %}
 
 {% block style %}
-<style>
-  body {
-    margin: 5rem;
-  }
-</style>
+.nav__container {
+  background-color: rgba(255, 255, 255, 0.7);
+  position: fixed;
+  top: 0; /* Position the child div at the top */
+  left: 0; /* Position the child div at the left */
+  width: 100%;
+}
 {% endblock style %}
 
 {% block content %}
 <div class="row gap-3">
-  <h3>{{ movie.title }}</h3>
   <div class="card" style="width: 100%; padding: 0;">
     <div class="row">
       <div class="col-auto">
-        <img class="card-img-top" src="{{ movie.poster_thumbnail.url }}" alt="">
+        <img class="card-img-top rounded" src="{{ movie.poster_thumbnail.url }}" alt="">
       </div>
       <div class="col">
+        <h3 class="fw-bold">{{ movie.title }}</h3>
         <ul class="list-group list-group-flush">
           <li class="list-group-item">원제 : {{ movie.original_title }}</li>
           <li class="list-group-item">개봉일 : {{ movie.release_date }}</li>
@@ -30,7 +50,7 @@
   {% for person in moviepeople %}
   <div class="card" style="width: 13rem; padding: 0;">
     <ul class="list-group list-group-flush">
-      <img class="card-img-top" src="{{ person.personphoto_thumbnail.url }}" alt="" style="">
+      <img class="card-img-top rounded" src="{{ person.personphoto_thumbnail.url }}" alt="" style="">
       <li class="list-group-item">이름 : {{ person.person_name }}</li>
       <li class="list-group-item">역할 : {{ person.part }}</li>
       {% if person.character_name %}
@@ -39,7 +59,7 @@
       {% if movie.user == user %}
       <form action="{% url 'movies:person_delete' movie.pk person.pk %}" method="POST">
         {% csrf_token %}
-        <li class="list-group-item"><input type="submit" value="PERSON DELETE" class="btn btn-primary"></li>
+        <li class="list-group-item"><input type="submit" value="PERSON DELETE" class="btn"></li>
       </form>
       {% endif %}
     </ul>
@@ -49,18 +69,18 @@
     {% if movie.user == user %}
     <form action="{% url 'movies:delete' movie.pk %}" method="POST">
       {% csrf_token %}
-      <input type="submit" value="DELETE" class="btn btn-primary">
+      <input type="submit" value="DELETE" class="btn">
     </form>
-    <a href="{% url 'movies:update' movie.pk %}" class="btn btn-primary">UPDATE</a>
-    <a href="{% url 'movies:person' movie.pk %}" class="btn btn-primary">PERSON</a>
+    <a href="{% url 'movies:update' movie.pk %}" class="btn">UPDATE</a>
+    <a href="{% url 'movies:person' movie.pk %}" class="btn">PERSON</a>
     {% else %}
-    <a href="{% url 'reviews:create' movie.pk %}" class="btn btn-primary">REVIEW</a>
-    <form action="{% url 'movies:wish' movie.pk %}" method=="POST">
+    <a href="{% url 'reviews:create' movie.pk %}" class="btn">REVIEW</a>
+    <form id="wish-form" data-movie-id="{{ movie.pk }}">
       {% csrf_token %}
       {% if user in movie.wish_users.all %}
-      <input type="submit" value="NOT WISH" class="btn btn-primary">
+      <input type="submit" value="NOT WISH" class="btn">
       {% else %}
-      <input type="submit" value="WISH" class="btn btn-primary">
+      <input type="submit" value="WISH" class="btn">
       {% endif %}
     </form>
     {% endif %}
@@ -84,7 +104,7 @@
             {% if review.user == user %}
             <form action="{% url 'reviews:delete' movie.pk review.pk %}" method="POST">
               {% csrf_token %}
-              <input type="submit" value="DELETE" class="btn btn-primary">
+              <input type="submit" value="DELETE" class="btn">
             </form>
             {% endif %}
           </div>
@@ -95,3 +115,27 @@
   </div>
 </div>
 {% endblock content %}
+{% block script %}
+<script>
+  const form = document.querySelector('#wish-form')
+  const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value
+  form.addEventListener('submit', function (event) {
+    event.preventDefault()
+    const movieId = event.target.dataset.movieId
+    axios({
+      method: 'post',
+      url: `/movies/${movieId}/wish/`,
+      headers: {'X-CSRFToken': csrftoken,}
+    })
+      .then((response) => {
+        const isWished = response.data.is_wished
+        const wishBtn = document.querySelector('#wish-form > input[type=submit]')
+        if (isWished === true) {
+          wishBtn.value = 'NOT WISH'
+        } else {
+          wishBtn.value = 'WISH'
+        }
+      })
+  })
+</script>
+{% endblock script %}

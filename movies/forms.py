@@ -1,5 +1,5 @@
 from django import forms
-from .models import Movie, MoviePeople
+from .models import Movie, MoviePeople, MoviePhoto
 
 class MovieForm(forms.ModelForm):
     title = forms.CharField(
@@ -158,3 +158,18 @@ class MoviePeopleForm(forms.ModelForm):
     class Meta:
         model = MoviePeople
         fields = ('person_name', 'part', 'character_name', 'person_photo')
+
+class MoviePhotoForm(forms.ModelForm):
+    image_movie = forms.ImageField(
+        label = '무비 포토',
+        widget = forms.ClearableFileInput(
+            attrs = {
+                'class': 'form-control',
+                'multiple': True,
+            },
+        ),
+        required = False,
+    )
+    class Meta:
+        model = MoviePhoto
+        fields = ('image_movie',)

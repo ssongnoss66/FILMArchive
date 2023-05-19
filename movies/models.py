@@ -68,6 +68,16 @@ class Movie(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+class MoviePhoto(models.Model):
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    def image_path(instance, filename):
+        return f'movies/{filename}'
+    image_movie = models.ImageField(upload_to=image_path, null=True, blank=True)
+    image_movie_thumbnail = ImageSpecField(source='image_movie',
+                                      processors=[Thumbnail(300, 200)],
+                                      format='JPEG',
+                                      options={'quality': 100})
+    
 class MoviePeople(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     person_name = models.CharField(max_length=50, null=True, blank=True)

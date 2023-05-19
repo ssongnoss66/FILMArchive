@@ -8,20 +8,34 @@
   .group__card {
     background-color: grey;
   }
+
+  .a__grouper {
+    color: white;
+    padding: 1rem;
+  }
 {% endblock style %}
 
 {% block content %}
   <div class="mb-3">
     {% if user.is_authenticated %}
-    <h3 class="h3__title">{{ user }}님 환영합니다!</h3>
-    <div class="justify-content-end">
-      <a href="{% url 'movies:create' %}" class="btn btn-fill pull-right">영화등록</a>
-      <a href="{% url 'magazines:create' %}" class="btn btn-fill pull-right">잡지등록</a>
-    </div>
     {% else %}
     <h3 class="h3__title">로그인하고 필마카이브의 다양한 서비스를 경험하세요!</h3>
     {% endif %}
   </div>
+
+  <div class="row gap-3">
+    <h3 class="h3__title">잡지에 실린 영화</h3>
+    {% for magazine in magazines %}
+    <div class="card mb-3" style="width: 15rem; padding: 0;">
+      <a href="{% url 'movies:magazine' magazine.pk %}">
+        <img class="card-img-top rounded" src="{{ magazine.cover_thumbnail.url }}" alt="">
+        <p class="m-0">{{ magazine.mgzn_title }}</p>
+        <p class="m-0" style="font-size: small; color: grey;">{{ magazine.publish_date }}</p>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+
   <div class="row gap-3">
     <h3 class="h3__title">평점이 높은 영화</h3>
     {% for movie in movies_rate %}
@@ -58,22 +72,22 @@
     <h3 class="h3__title">장르별 영화</h3>
     {% regroup movies_genre by genre as genre_list %}
     {% for genre in genre_list %}
-    <div class="card group__card mb-3" style="width: 15rem; padding: 0;">
+    <div class="card group__card mb-3" style="width: 15rem;">
       <div class="row">
         {% for movie in genre.list|slice:":2" %}
-        <div class="col-6">
-          <img class="card-img-top" src="{{ movie.poster_thumbnail.url }}" alt="" style="width: 100%;">
+        <div class="col-6" style="padding: 0; margin: 3;">
+          <img class="card-img-top rounded" src="{{ movie.poster_thumbnail.url }}" alt="" style="width: 100%;">
         </div>
         {% endfor %}
       </div>
-      <div class="row">
+      <div class="row mb-3">
         {% for movie in genre.list|slice:"2:4" %}
-        <div class="col-6">
-          <img class="card-img-top" src="{{ movie.poster_thumbnail.url }}" alt="" style="width: 100%;">
+        <div class="col-6" style="padding: 0; margin: 3;">
+          <img class="card-img-top rounded" src="{{ movie.poster_thumbnail.url }}" alt="" style="width: 100%;">
         </div>
         {% endfor %}
       </div>
-      <p><a href="{% url 'movies:genre' genre.grouper %}">{{ genre.grouper }}</a></p>
+      <p><a class="a__grouper" href="{% url 'movies:genre' genre.grouper %}">{{ genre.grouper }}</a></p>
     </div>
     {% endfor %}
   </div>
@@ -82,40 +96,22 @@
     <h3 class="h3__title">국가별 영화</h3>
     {% regroup movies_country by country as country_list %}
     {% for country in country_list %}
-    <div class="card group__card mb-3" style="width: 15rem; padding: 0;">
-
+    <div class="card group__card mb-3" style="width: 15rem;">
       <div class="row">
         {% for movie in country.list|slice:":2" %}
-        <div class="col-6">
-          <img class="card-img-top" src="{{ movie.poster_thumbnail.url }}" alt="" style="width: 100%;">
+        <div class="col-6" style="padding: 0; margin: 3;">
+          <img class="card-img-top rounded" src="{{ movie.poster_thumbnail.url }}" alt="" style="width: 100%;">
         </div>
         {% endfor %}
       </div>
-      <div class="row">
+      <div class="row mb-3">
         {% for movie in country.list|slice:"2:4" %}
-        <div class="col-6">
-          <img class="card-img-top" src="{{ movie.poster_thumbnail.url }}" alt="" style="width: 100%;">
+        <div class="col-6" style="padding: 0; margin: 3;">
+          <img class="card-img-top rounded" src="{{ movie.poster_thumbnail.url }}" alt="" style="width: 100%;">
         </div>
         {% endfor %}
       </div>
-
-      <p><a href="{% url 'movies:country' country.grouper %}">{{ country.grouper }}</a></p>
-    </div>
-    {% endfor %}
-  </div>
-
-  <div class="row gap-3">
-    <h3 class="h3__title">잡지별 영화</h3>
-    {% for magazine in magazines %}
-    <div class="card group__card mb-3" style="width: 15rem; padding: 0;">
-       <div class="row">
-        {% for movie in magazine.moviemagazine_set.all %}
-        <div class="col-6">
-          <img class="card-img-top" src="{{ movie.poster_thumbnail.url }}" alt="" style="width: 100%;">
-        </div>
-        {% endfor %}
-      </div>
-      <p><a href="{% url 'movies:magazine' magazine.pk %}">{{ magazine.mgzn_title }}</a></p>
+      <p><a class="a__grouper" href="{% url 'movies:country' country.grouper %}">{{ country.grouper }}</a></p>
     </div>
     {% endfor %}
   </div>

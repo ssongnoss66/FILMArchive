@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
-from .models import Movie, MoviePeople
+from .models import Movie, MoviePeople, MoviePhoto
 from magazines.models import Magazine, MagazineMovie
-from .forms import MovieForm, MoviePeopleForm
+from .forms import MovieForm, MoviePeopleForm, MoviePhotoForm
 from reviews.models import Review
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
@@ -37,21 +37,28 @@ def create(request):
     # Movie.objects.all().delete()
     if request.method == 'POST':
         movie_form = MovieForm(request.POST, request.FILES)
+        photo_form = MoviePhotoForm(request.POST, request.FILES)
         if movie_form.is_valid():
             movie = movie_form.save(commit=False)
             movie.user = request.user
             movie.save()
+            photo = photo_form.save(commit=False)
+            photo.movie = movie
+            photo.save()
             return redirect('movies:detail', movie.pk)
     else:
         movie_form = MovieForm()
+        photo_form = MoviePhotoForm()
         movies_country = Movie.objects.all().order_by('country')
         movies_genre = Movie.objects.all().order_by('genre')
         magazines = Magazine.objects.all()
+        
     context = {
         'magazines': magazines,
         'movies_genre': movies_genre,
         'movies_country': movies_country,
-        'movie_form': movie_form
+        'movie_form': movie_form,
+        'photo_form': photo_form,
     }
     return render(request, 'movies/create.html', context)
 
@@ -59,6 +66,11 @@ def detail(request, movie_id):
     movie = Movie.objects.get(pk = movie_id)
     moviepeople = movie.moviepeople_set.all()
     reviews = Review.objects.filter(movie_id=movie_id)
+    moviephotos = movie.moviephoto_set.all()
+    if moviephotos.first():
+        first_moviephoto = moviephotos.first().image_movie_thumbnail.url
+    else:
+        first_moviephoto = '/static/beach.jpg'
     movies_country = Movie.objects.all().order_by('country')
     movies_genre = Movie.objects.all().order_by('genre')
     magazines = Magazine.objects.all()
@@ -69,6 +81,8 @@ def detail(request, movie_id):
         'movie': movie,
         'moviepeople': moviepeople,
         'reviews': reviews,
+        'moviephotos': moviephotos,
+        'first_moviephoto': first_moviephoto,
     }
     return render(request, 'movies/detail.html', context)
 
@@ -136,6 +150,20 @@ def wish(request, movie_id):
     movie = Movie.objects.get(pk=movie_id)
     if request.user in movie.wish_users.all():
         movie.wish_users.remove(request.user)
+        is_wished = False
+    else:
+        movie.wish_users.add(request.user)
+        is_wished = True
+    context = {
+        'is_wished': is_wished,
+    }
+    return JsonResponse(context)
+
+@login_required
+def grouper_wsh(request, movie_id):
+    movie = Movie.objects.get(pk=movie_id)
+    if request.user in movie.wish_users.all():
+        movie.wish_users.remove(request.user)
     else:
         movie.wish_users.add(request.user)
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
@@ -174,7 +202,9 @@ def magazine(request, magazine_id):
     magazine = Magazine.objects.get(pk=magazine_id)
     movies_all = magazine.magazinemovie_set.all()
     movies_raw = [movie.movie for movie in movies_all]
-    movies = sorted(movies_raw, key=lambda movie: movie.rate, reverse=True)  # Sort movies by rate
+    def get_rate(movie):
+        return movie.rate or 0  # Use 0 as the default value if rate is None
+    movies = sorted(movies_raw, key=get_rate, reverse=True)  # Sort movies by rate
     movies_country = Movie.objects.all().order_by('country')
     movies_genre = Movie.objects.all().order_by('genre')
     magazines = Magazine.objects.all()
