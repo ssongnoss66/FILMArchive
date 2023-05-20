@@ -1,0 +1,194 @@
+[
+{
+    "model": "movies.movie",
+    "pk": 4,
+    "fields": {
+        "user": 1,
+        "title": "패왕별희",
+        "original_title": "霸王别姬",
+        "rate": "4.6",
+        "poster": "movies/패왕별희/MeFmrn8C5cO0L_HB6qE7_z_XfdV5bVy8iAoxVb8bUbbxzqDrAEiqT_gC1Xsq0GkzMLZlJa5Nwgx_EVyrWbn.webp",
+        "release_date": "1993-01-01",
+        "genre": "드라마",
+        "country": "기타",
+        "running_time": "156분",
+        "age": "15세",
+        "created_at": "2023-05-12T05:22:41.312Z",
+        "updated_at": "2023-05-20T16:47:41.901Z",
+        "wish_users": []
+    }
+},
+{
+    "model": "movies.movie",
+    "pk": 5,
+    "fields": {
+        "user": 1,
+        "title": "조제, 호랑이 그리고 물고기들",
+        "original_title": "ジョゼと虎と魚たち",
+        "rate": "4.2",
+        "poster": "movies/조제, 호랑이 그리고 물고기들/u0yLl7iVeG7MexeP08wtowt4kwg2qrRhjjjiFltc64f8NXthZ0HGyHs5Kn0agQW_C8HbCHy.webp",
+        "release_date": "2003-12-13",
+        "genre": "로맨스",
+        "country": "일본",
+        "running_time": "116분",
+        "age": "15세",
+        "created_at": "2023-05-15T05:41:25.332Z",
+        "updated_at": "2023-05-20T16:47:41.903Z",
+        "wish_users": [
+            2
+        ]
+    }
+},
+{
+    "model": "movies.movie",
+    "pk": 6,
+    "fields": {
+        "user": 2,
+        "title": "물안에서",
+        "original_title": "물안에서",
+        "rate": null,
+        "poster": "movies/물안에서/NlnmPdOJJy2dtPKVBC_JQdAKxtusvl_woUoJonXq44Pbcp3cA_SG65jG7jPfZx45mbj7D1PZxJd_m3Mc8Pn.webp",
+        "release_date": "2023-04-12",
+        "genre": "드라마",
+        "country": "한국",
+        "running_time": "61분",
+        "age": "12세",
+        "created_at": "2023-05-17T01:13:33.234Z",
+        "updated_at": "2023-05-17T01:13:33.234Z",
+        "wish_users": []
+    }
+},
+{
+    "model": "movies.movie",
+    "pk": 7,
+    "fields": {
+        "user": 2,
+        "title": "파벨만스",
+        "original_title": "The Fabelmans",
+        "rate": null,
+        "poster": "movies/파벨만스/wDpfRZt2ftfxudgATS2vfiajeMs06pnXRCZjDDbetk3seL3yNNwIeDGUhtGDq2B5cGsgwN2IjCD_Z6R1Q4X.webp",
+        "release_date": "2022-11-11",
+        "genre": "드라마",
+        "country": "미국",
+        "running_time": "151분",
+        "age": "12세",
+        "created_at": "2023-05-17T01:16:02.064Z",
+        "updated_at": "2023-05-17T01:16:02.064Z",
+        "wish_users": []
+    }
+},
+{
+    "model": "movies.movie",
+    "pk": 8,
+    "fields": {
+        "user": 2,
+        "title": "이니셰린의 밴시",
+        "original_title": "The Banshees of Inisherin",
+        "rate": null,
+        "poster": "movies/이니셰린의 밴시/nyyhrfyqveRzaovX9P1z9WI6iPewFx94iyAL7QDFsrtJPezUgYUyerReBcHyG9MkrRh-QXz_F9BVZBR.webp",
+        "release_date": "2022-10-21",
+        "genre": "코미디",
+        "country": "기타",
+        "running_time": "109분",
+        "age": "15세",
+        "created_at": "2023-05-17T01:17:44.505Z",
+        "updated_at": "2023-05-17T01:17:44.505Z",
+        "wish_users": []
+    }
+},
+{
+    "model": "movies.movie",
+    "pk": 9,
+    "fields": {
+        "user": 2,
+        "title": "애프터썬",
+        "original_title": "Aftersun",
+        "rate": null,
+        "poster": "movies/애프터썬/KxzVzSgc-63rdh4MEEmUEnNikIm1YyvAKDgLD8HUa8diRXwnp-G2BWfnRcaTRiEh3gbxQW-xPji_rvn77TX.webp",
+        "release_date": "2022-11-18",
+        "genre": "드라마",
+        "country": "영국",
+        "running_time": "102분",
+        "age": "12세",
+        "created_at": "2023-05-17T01:19:03.986Z",
+        "updated_at": "2023-05-17T01:19:03.986Z",
+        "wish_users": []
+    }
+},
+{
+    "model": "movies.movie",
+    "pk": 10,
+    "fields": {
+        "user": 2,
+        "title": "TAR 타르",
+        "original_title": "Tár",
+        "rate": null,
+        "poster": "movies/TAR 타르/Tlru87Cb7MAbbkB9b3x26Q3xgcufX84qSe1dvKOHSR0KNrYmWY0EsA7TKNlqySwvRvHEo_6sr_ctnVtar.webp",
+        "release_date": "2022-10-07",
+        "genre": "드라마",
+        "country": "미국",
+        "running_time": "158분",
+        "age": "15세",
+        "created_at": "2023-05-17T01:20:35.754Z",
+        "updated_at": "2023-05-17T01:20:35.754Z",
+        "wish_users": []
+    }
+},
+{
+    "model": "movies.movie",
+    "pk": 11,
+    "fields": {
+        "user": 2,
+        "title": "에브리씽 에브리웨어 올 앳 원스",
+        "original_title": "Everything Everywhere All at Once",
+        "rate": null,
+        "poster": "movies/에브리씽 에브리웨어 올 앳 원스/2mKL7EYCwllOCPZwdVQ9agPy6_h7hCih56Ab1GYP6W5sNgi1zzwfbimpuOaVm4_xIO1wMd.webp",
+        "release_date": "2022-03-25",
+        "genre": "액션",
+        "country": "미국",
+        "running_time": "139분",
+        "age": "15세",
+        "created_at": "2023-05-17T01:22:22.617Z",
+        "updated_at": "2023-05-17T01:22:22.617Z",
+        "wish_users": []
+    }
+},
+{
+    "model": "movies.movie",
+    "pk": 12,
+    "fields": {
+        "user": 2,
+        "title": "사랑의 불꽃",
+        "original_title": "Fire of Love",
+        "rate": null,
+        "poster": "movies/사랑의 불꽃/VtDGslCTFBQX-23Tv0TMwg.jpg",
+        "release_date": "2022-07-06",
+        "genre": "다큐멘터리",
+        "country": "미국",
+        "running_time": "98분",
+        "age": "전체",
+        "created_at": "2023-05-17T01:26:00.028Z",
+        "updated_at": "2023-05-17T01:26:00.028Z",
+        "wish_users": []
+    }
+},
+{
+    "model": "movies.movie",
+    "pk": 13,
+    "fields": {
+        "user": 2,
+        "title": "고잉 투 마스: 더 니키 지오반니 프로젝트",
+        "original_title": "Going to Mars: The Nikki Giovanni Project",
+        "rate": "5.0",
+        "poster": "movies/고잉 투 마스: 더 니키 지오반니 프로젝트/1B0CmEnyR-R6nlyJahSw2Q.jpg",
+        "release_date": "2023-01-01",
+        "genre": "다큐멘터리",
+        "country": "미국",
+        "running_time": "96분",
+        "age": "전체",
+        "created_at": "2023-05-19T06:59:56.906Z",
+        "updated_at": "2023-05-20T16:47:41.904Z",
+        "wish_users": []
+    }
+}
+]

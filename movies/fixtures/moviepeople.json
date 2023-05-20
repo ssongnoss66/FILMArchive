@@ -1,0 +1,35 @@
+[
+{
+    "model": "movies.moviepeople",
+    "pk": 1,
+    "fields": {
+        "movie": 4,
+        "person_name": "천카이거",
+        "part": "감독",
+        "character_name": "",
+        "person_photo": "천카이거.jpeg"
+    }
+},
+{
+    "model": "movies.moviepeople",
+    "pk": 2,
+    "fields": {
+        "movie": 4,
+        "person_name": "장국영",
+        "part": "주연",
+        "character_name": "두지/쳉 데이",
+        "person_photo": "장국영.jpeg"
+    }
+},
+{
+    "model": "movies.moviepeople",
+    "pk": 4,
+    "fields": {
+        "movie": 4,
+        "person_name": "공리",
+        "part": "주연",
+        "character_name": "주샨",
+        "person_photo": "공리.webp"
+    }
+}
+]
