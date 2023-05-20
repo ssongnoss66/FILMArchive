@@ -13,7 +13,14 @@ def create(request):
             return redirect('magazines:detail', magazine.pk)
     else:
         magazine_form = MagazineForm()
+        movies_country = Movie.objects.all().order_by('country')
+        movies_genre = Movie.objects.all().order_by('genre')
+        magazines = Magazine.objects.all()
+        
     context = {
+        'magazines': magazines,
+        'movies_genre': movies_genre,
+        'movies_country': movies_country,
         'magazine_form': magazine_form,
     }
     return render(request, 'magazines/create.html', context)
@@ -22,7 +29,13 @@ def detail(request, magazine_id):
     magazine = Magazine.objects.get(pk=magazine_id)
     movies = magazine.magazinemovie_set.all()
     mgzn_movies = [movie.movie for movie in movies]
+    movies_country = Movie.objects.all().order_by('country')
+    movies_genre = Movie.objects.all().order_by('genre')
+    magazines = Magazine.objects.all()
     context = {
+        'magazines': magazines,
+        'movies_genre': movies_genre,
+        'movies_country': movies_country,
         'magazine': magazine,
         'mgzn_movies': mgzn_movies,
     }
@@ -45,7 +58,13 @@ def update(request, magazine_id):
             return redirect('magazines:detail', magazine.pk)
     else:
         update_form = MagazineForm(instance=magazine)
+        movies_country = Movie.objects.all().order_by('country')
+        movies_genre = Movie.objects.all().order_by('genre')
+        magazines = Magazine.objects.all()
     context = {
+        'magazines': magazines,
+        'movies_genre': movies_genre,
+        'movies_country': movies_country,
         'update_form': update_form,
         'magazine': magazine,
     }
@@ -63,7 +82,14 @@ def mgzn_movie(request, magazine_id):
             return redirect('magazines:detail', magazine.pk)
     else:
         mgzn_movie_form = MagazineMovieForm()
+        movies_country = Movie.objects.all().order_by('country')
+        movies_genre = Movie.objects.all().order_by('genre')
+        magazines = Magazine.objects.all()
+        
     context = {
+        'magazines': magazines,
+        'movies_genre': movies_genre,
+        'movies_country': movies_country,
         'magazine': magazine,
         'mgzn_movie_form': mgzn_movie_form,
     }

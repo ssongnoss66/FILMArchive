@@ -17,14 +17,6 @@ import base64
 import json
 import urllib.parse
 import urllib.request
-from django.conf import settings
-import os
-import sys
-from dotenv import load_dotenv
-
-load_dotenv()
-NAVER_CLIENT_ID = os.getenv('NAVER_CLIENT_ID')
-NAVER_CLIENT_SECRET = os.getenv('NAVER_CLIENT_SECRET')
 
 # Create your views here.
 def index(request):
@@ -51,29 +43,6 @@ def index(request):
         'movies': movies,
     }
     return render(request, 'movies/index.html', context)
-
-def movie_search(request):
-    if request.method == 'GET':
-        client_id = NAVER_CLIENT_ID
-        client_secret = NAVER_CLIENT_SECRET
-        q = request.GET.get('q')
-        encText = urllib.parse.quote("{}".format(q))
-        url = "https://openapi.naver.com/v1/search/movie?query=" + encText  # json 결과
-        movie_request = urllib.request.Request(url)
-        movie_request.add_header("X-Naver-Client-Id",client_id)
-        movie_request.add_header("X-Naver-Client-Secret",client_secret)
-        response = urllib.request.urlopen(movie_request)
-        rescode = response.getcode()
-        if (rescode == 200):
-            response_body = response.read()
-            result = json.loads(response_body.decode('utf-8'))
-            items = result.get('items')
-        context = {
-            'items': items,
-        }
-        return render(request, 'movie_search.html', context)
-    else:
-        return render(request, 'movie_search.html')
         
 def create(request):
     # Movie.objects.all().delete()

@@ -151,11 +151,6 @@
               <li class="nav__personal-item"><a href="{% url 'accounts:signup' %}">회원가입</a></li>
               {% endif %}
             </ul>
-            <form class="d-flex" action="{% url 'movies:index' %}" method="GET">
-              {% csrf_token %}
-              <input name="q" class="form-control me-2" type="search" placeholder="search in naver" aria-label="Search">
-              <button class="btn" type="submit">🔍</button>
-            </form>
           </div>
         </div>
       </nav>

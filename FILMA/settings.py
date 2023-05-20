@@ -27,7 +27,10 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['port-0-filmarchive-lhe2blhw8bzlc.sel4.cloudtype.app']
+ALLOWED_HOSTS = [
+    'port-0-filmarchive-lhe2blhw8bzlc.sel4.cloudtype.app',
+    '127.0.0.1'
+]
 
 
 # Application definition
