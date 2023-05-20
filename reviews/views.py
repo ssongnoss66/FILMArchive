@@ -9,14 +9,19 @@ from django.contrib.auth.decorators import login_required
 def create(request, movie_id):
     movie = Movie.objects.get(pk = movie_id)
     if request.method == "POST":
-        review_form = ReviewForm(request.POST)
+        if Review.objects.filter(user=request.user, movie=movie).exists():
+            review_old = Review.objects.get(user=request.user, movie=movie)
+            review_form = ReviewForm(request.POST, instance=review_old)
+        else:
+            review_form = ReviewForm(request.POST)
         if review_form.is_valid():
-            review=review_form.save(commit=False)
+            review = review_form.save(commit=False)
             review.user = request.user
             review.movie = movie
             review.rate = request.POST.get('rate')
             review.save()
             return redirect('movies:detail', movie.pk)
+
     else:
         review_form = ReviewForm()
     context = {

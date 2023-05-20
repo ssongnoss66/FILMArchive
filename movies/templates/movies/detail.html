@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'movies/owl.carousel.min.css' %}">
+<link rel="stylesheet" href="{% static 'movies/owl.theme.default.min.css' %}">
+{% endblock head %}
 {% block nav_bg %}
 position: relative;
 
@@ -26,6 +30,43 @@ position: relative;
   left: 0; /* Position the child div at the left */
   width: 100%;
 }
+
+#myform fieldset{
+  display: inline-block;
+  direction: rtl;
+  border:0;
+}
+#myform fieldset legend{
+    text-align: right;
+}
+#myform input[type=radio]{
+    display: none;
+}
+#myform label{
+    font-size: 3em;
+    color: transparent;
+    text-shadow: 0 0 0 #f0f0f0;
+}
+#myform label:hover{
+    text-shadow: 0 0 0 rgba(250, 208, 0, 0.99);
+}
+#myform label:hover ~ label{
+    text-shadow: 0 0 0 rgba(250, 208, 0, 0.99);
+}
+#myform input[type=radio]:checked ~ label{
+    text-shadow: 0 0 0 rgba(250, 208, 0, 0.99);
+}
+#reviewContents {
+    width: 100%;
+    height: 150px;
+    padding: 10px;
+    box-sizing: border-box;
+    border: solid 1.5px #D3D3D3;
+    border-radius: 5px;
+    font-size: 16px;
+    resize: none;
+}
+
 {% endblock style %}
 
 {% block content %}
@@ -36,87 +77,142 @@ position: relative;
         <img class="card-img-top rounded" src="{{ movie.poster_thumbnail.url }}" alt="">
       </div>
       <div class="col">
-        <h3 class="fw-bold">{{ movie.title }}</h3>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item">원제 : {{ movie.original_title }}</li>
-          <li class="list-group-item">개봉일 : {{ movie.release_date }}</li>
-          <li class="list-group-item">장르 : {{ movie.genre }}</li>
-          <li class="list-group-item">국가 : {{ movie.country }}</li>
-          <li class="list-group-item">연령 : {{ movie.age }}</li>
-        </ul>
+        <h2 class="fw-bold">{{ movie.title }}</h2>
+        <p style = "font-size: 13pt;">{{ movie.release_date.year }} ・ {{ movie.genre }} ・ {{ movie.country }} ・ 평균 평점 {{ movie.rate }}점</p>
+        <div class="d-grid gap-2">
+          {% if movie.user == user %}
+          <form action="{% url 'movies:delete' movie.pk %}" method="POST">
+            {% csrf_token %}
+            <input type="submit" value="DELETE" class="btn">
+          </form>
+          <a href="{% url 'movies:update' movie.pk %}" class="btn">UPDATE</a>
+          <a href="{% url 'movies:person' movie.pk %}" class="btn">PERSON</a>
+          {% else %}
+          <form name="myform" id="myform" method="POST" action="{% url 'movies:detail' movie.pk %}">
+            {% csrf_token %}
+            <fieldset>
+              <span class="text-bold">별점을 선택해주세요</span>
+              <input type="radio" name="rate" value="5" id="rate1"><label for="rate1">★</label>
+              <input type="radio" name="rate" value="4" id="rate2"><label for="rate2">★</label>
+              <input type="radio" name="rate" value="3" id="rate3"><label for="rate3">★</label>
+              <input type="radio" name="rate" value="2" id="rate4"><label for="rate4">★</label>
+              <input type="radio" name="rate" value="1" id="rate5"><label for="rate5">★</label>
+            </fieldset>
+            <button class="btn" type="submit">Save</button>
+          </form>
+          {% comment %} <div class="d-grid gap-2 d-flex" style="margin: 0; padding: 0;"> {% endcomment %}
+          <a href="{% url 'reviews:create' movie.pk %}" class="btn">REVIEW</a>
+          <form id="wish-form" data-movie-id="{{ movie.pk }}">
+            {% csrf_token %}
+            {% if user in movie.wish_users.all %}
+            <input type="submit" value="NOT WISH" class="btn">
+            {% else %}
+            <input type="submit" value="WISH" class="btn">
+            {% endif %}
+          </form>
+          {% endif %}
+        </div>
       </div>
     </div>
   </div>
-  {% for person in moviepeople %}
-  <div class="card" style="width: 13rem; padding: 0;">
-    <ul class="list-group list-group-flush">
-      <img class="card-img-top rounded" src="{{ person.personphoto_thumbnail.url }}" alt="" style="">
-      <li class="list-group-item">이름 : {{ person.person_name }}</li>
-      <li class="list-group-item">역할 : {{ person.part }}</li>
-      {% if person.character_name %}
-      <li class="list-group-item">캐릭터명 : {{ person.character_name }}</li>
-      {% endif %}
-      {% if movie.user == user %}
-      <form action="{% url 'movies:person_delete' movie.pk person.pk %}" method="POST">
-        {% csrf_token %}
-        <li class="list-group-item"><input type="submit" value="PERSON DELETE" class="btn"></li>
-      </form>
-      {% endif %}
-    </ul>
-  </div>
-  {% endfor %}
-  <div class="d-grid gap-2 d-flex" style="margin: 0; padding: 0;">
-    {% if movie.user == user %}
-    <form action="{% url 'movies:delete' movie.pk %}" method="POST">
-      {% csrf_token %}
-      <input type="submit" value="DELETE" class="btn">
-    </form>
-    <a href="{% url 'movies:update' movie.pk %}" class="btn">UPDATE</a>
-    <a href="{% url 'movies:person' movie.pk %}" class="btn">PERSON</a>
-    {% else %}
-    <a href="{% url 'reviews:create' movie.pk %}" class="btn">REVIEW</a>
-    <form id="wish-form" data-movie-id="{{ movie.pk }}">
-      {% csrf_token %}
-      {% if user in movie.wish_users.all %}
-      <input type="submit" value="NOT WISH" class="btn">
-      {% else %}
-      <input type="submit" value="WISH" class="btn">
-      {% endif %}
-    </form>
-    {% endif %}
-  </div>
-  <div class="card">
-    <ul class="list-group list-group-flush">
-    {% for review in reviews %}
-      <li class="list-group-item">
-        <div class="row">
-          <div class="col-auto">
-            <a href="{% url 'accounts:profile' review.user.username %}">
-              {{review.user}} :
-            </a> 
-          </div>
-          <div class="col">
-            <a href="{% url 'reviews:detail' movie.pk review.pk %}">
-              {{review.content}}
-            </a>
-          </div>
-          <div class="col-auto d-grid gap-2">
-            {% if review.user == user %}
-            <form action="{% url 'reviews:delete' movie.pk review.pk %}" method="POST">
+  <div class="info">
+    <div class="info__basic">
+      <h4>기본 정보</h4>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">원제 : {{ movie.original_title }}</li>
+        <li class="list-group-item">개봉일 : {{ movie.release_date }}</li>
+        <li class="list-group-item">장르 : {{ movie.genre }}</li>
+        <li class="list-group-item">국가 : {{ movie.country }}</li>
+        <li class="list-group-item">연령 : {{ movie.age }}</li>
+      </ul>
+    </div>
+    {% if moviepeople %}
+    <div class="info__person">
+      <h4>인물 정보</h4>
+      <div class="owl-carousel owl-theme">
+        {% for person in moviepeople %}
+        <div class="card" style="width: 13rem; padding: 0;">
+          <ul class="list-group list-group-flush">
+            <img class="card-img-top rounded" src="{{ person.personphoto_thumbnail.url }}" alt="" style="">
+            <li class="list-group-item">이름 : {{ person.person_name }}</li>
+            <li class="list-group-item">역할 : {{ person.part }}</li>
+            {% if person.character_name %}
+            <li class="list-group-item">캐릭터명 : {{ person.character_name }}</li>
+            {% endif %}
+            {% if movie.user == user %}
+            <form action="{% url 'movies:person_delete' movie.pk person.pk %}" method="POST">
               {% csrf_token %}
-              <input type="submit" value="DELETE" class="btn">
+              <li class="list-group-item"><input type="submit" value="PERSON DELETE" class="btn"></li>
             </form>
             {% endif %}
-          </div>
+          </ul>
         </div>
-      </li>
-    {% endfor %}
-    </ul>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+    {% if graph_image %}
+    <div class="info__rategrph">
+      <h4>별점 그래프 <span style="font-size: 13pt;">(평균 ★{{ movie.rate }} / {{ reviews_num }}명)</span></h4>
+          <img src="data:image/png;base64,{{ graph_image }}" alt="Rate Distribution Graph">
+    </div>
+    {% endif %}
+    <div class="info__reviews">
+      <h4>리뷰</h4>
+      <div class="owl-carousel owl-theme">
+        {% for review in reviews %}
+          {% if review.content %}
+            <div class="card" style="width: 13rem; padding: 0;">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                  <a href="{% url 'accounts:profile' review.user.username %}">{{ review.user.username }}</a>
+                </li>
+                <li class="list-group-item">
+                  <a href="{% url 'reviews:detail' movie.pk review.pk %}">{{ review.content }}</a>
+                </li>
+                <li class="list-group-item">
+                  {% if review.user == user %}
+                  <form action="{% url 'reviews:delete' movie.pk review.pk %}" method="POST">
+                    {% csrf_token %}
+                    <input type="submit" value="DELETE" class="btn">
+                  </form>
+                  {% endif %}
+                </li>
+              </ul>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
   </div>
 </div>
 {% endblock content %}
 {% block script %}
-<script>
+  <script src="{% static 'movies/owl.carousel.min.js' %}"></script>
+  <script>
+  $('.owl-carousel').owlCarousel({
+    loop:false,
+    margin:10,
+    nav:true,
+    responsive:{
+        0:{
+            items:1
+        },
+        500:{
+            items:2
+        },
+        992:{
+            items:3
+        },
+        1200:{
+            items:4
+        },
+        1400:{
+            items:5
+        }
+    }
+  })
+
   const form = document.querySelector('#wish-form')
   const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value
   form.addEventListener('submit', function (event) {

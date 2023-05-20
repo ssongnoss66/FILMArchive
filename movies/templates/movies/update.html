@@ -17,6 +17,20 @@
     {{ field }}
   </div> 
   {% endfor %}
+  <div class="mb-3">
+      <p class="mb-1">추가할 이미지</p>
+      {{ image_form }}
+    </div>
+    <p class="mb-1">삭제할 이미지</p>
+    <ul>
+      {% for image in images %}
+      <li>
+        <img src="{{ image.image_movie_thumbnail.url }}" alt="{{ image.image_movie }}" width="100px;">
+        <input type="checkbox" name="delete_images" value="{{ image.id }}" id="delete_images-{{ image.id }}">
+        <label for="delete_images-{{ image.id }}">{{ image.image_movie }}</label>
+      </li>
+      {% endfor %}
+    </ul>
   <div class="d-grid gap-2 mb-2">
     <input type="submit" class="btn btn-primary" value="UPDATE">
   </div>

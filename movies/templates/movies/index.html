@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
-
+{% load static %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'movies/owl.carousel.min.css' %}">
+<link rel="stylesheet" href="{% static 'movies/owl.theme.default.min.css' %}">
+{% endblock head %}
 {% block style %}
   .h3__title {
     font-weight: 900;
@@ -25,47 +29,53 @@
 
   <div class="row gap-3">
     <h3 class="h3__title">잡지에 실린 영화</h3>
-    {% for magazine in magazines %}
-    <div class="card mb-3" style="width: 15rem; padding: 0;">
-      <a href="{% url 'movies:magazine' magazine.pk %}">
-        <img class="card-img-top rounded" src="{{ magazine.cover_thumbnail.url }}" alt="">
-        <p class="m-0">{{ magazine.mgzn_title }}</p>
-        <p class="m-0" style="font-size: small; color: grey;">{{ magazine.publish_date }}</p>
-      </a>
+    <div class="owl-carousel owl-theme">
+      {% for magazine in magazines %}
+      <div class="card mb-3" style="width: 15rem; padding: 0;">
+        <a href="{% url 'movies:magazine' magazine.pk %}">
+          <img class="card-img-top rounded" src="{{ magazine.cover_thumbnail.url }}" alt="">
+          <p class="m-0">{{ magazine.mgzn_title }}</p>
+          <p class="m-0" style="font-size: small; color: grey;">{{ magazine.publish_date }}</p>
+        </a>
+      </div>
+      {% endfor %}
     </div>
-    {% endfor %}
   </div>
 
   <div class="row gap-3">
     <h3 class="h3__title">평점이 높은 영화</h3>
-    {% for movie in movies_rate %}
-    <div class="card mb-3" style="width: 15rem; padding: 0;">
-      <a href="{% url 'movies:detail' movie.pk %}">
-        <img class="card-img-top rounded" src="{{ movie.poster_thumbnail.url }}" alt="">
-        <p class="m-0">{{ movie.title }}</p>
-        <p class="m-0">{{ movie.release_date.year }} ・ {{ movie.country }}</p>
-        <p class="m-0" style="font-size: small; color: grey;">평균 ★{{ movie.rate }}</p>
-      </a>
+    <div class="owl-carousel owl-theme">
+      {% for movie in movies_rate %}
+      <div class="card mb-3" style="width: 15rem; padding: 0;">
+        <a href="{% url 'movies:detail' movie.pk %}">
+          <img class="card-img-top rounded" src="{{ movie.poster_thumbnail.url }}" alt="">
+          <p class="m-0">{{ movie.title }}</p>
+          <p class="m-0">{{ movie.release_date.year }} ・ {{ movie.country }}</p>
+          <p class="m-0" style="font-size: small; color: grey;">평균 ★{{ movie.rate }}</p>
+        </a>
+      </div>
+      {% endfor %}
     </div>
-    {% endfor %}
   </div>
 
   <div class="row gap-3">
     <h3 class="h3__title">새로 등록된 영화</h3>
-    {% for movie in movies_new %}
-    <div class="card mb-3" style="width: 15rem; padding: 0;">
-      <a href="{% url 'movies:detail' movie.pk %}">
-        <img class="card-img-top rounded" src="{{ movie.poster_thumbnail.url }}" alt="">
-        <p class="m-0">{{ movie.title }}</p>
-        <p class="m-0">{{ movie.release_date.year }} ・ {{ movie.country }}</p>
-        {% if movie.rate %}
-        <p class="m-0" style="font-size: small; color: red;">평균 ★{{ movie.rate }}</p>
-        {% else %}
-        <p class="m-0" style="font-size: small; color: grey;">평가 없음</p>
-        {% endif %}
-      </a>
+    <div class="owl-carousel owl-theme">
+      {% for movie in movies_new %}
+      <div class="card mb-3" style="width: 15rem; padding: 0;">
+        <a href="{% url 'movies:detail' movie.pk %}">
+          <img class="card-img-top rounded" src="{{ movie.poster_thumbnail.url }}" alt="">
+          <p class="m-0">{{ movie.title }}</p>
+          <p class="m-0">{{ movie.release_date.year }} ・ {{ movie.country }}</p>
+          {% if movie.rate %}
+          <p class="m-0" style="font-size: small; color: red;">평균 ★{{ movie.rate }}</p>
+          {% else %}
+          <p class="m-0" style="font-size: small; color: grey;">평가 없음</p>
+          {% endif %}
+        </a>
+      </div>
+      {% endfor %}
     </div>
-    {% endfor %}
   </div>
 
   <div class="row gap-3">
@@ -116,3 +126,31 @@
     {% endfor %}
   </div>
 {% endblock content %}
+
+{% block script %}
+<script src="{% static 'movies/owl.carousel.min.js' %}"></script>
+<script>
+  $('.owl-carousel').owlCarousel({
+    loop:false,
+    margin:10,
+    nav:true,
+    responsive:{
+        0:{
+            items:1
+        },
+        500:{
+            items:2
+        },
+        992:{
+            items:3
+        },
+        1200:{
+            items:4
+        },
+        1400:{
+            items:5
+        }
+    }
+})
+</script>
+{% endblock script %}

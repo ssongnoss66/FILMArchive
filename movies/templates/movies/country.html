@@ -81,10 +81,13 @@
               </form> {% endcomment %}
             </div>
           </div>
-          
-          <div class="info__third box">
-            {{ movie.review_set.first.user }} : {{ movie.review_set.first.content }}
-          </div>
+          {% with first_review=movie.review_set.all|first %}
+            {% if first_review.content %}
+              <div class="info__third box">
+                {{ first_review.user }} : {{ first_review.content }}
+              </div>
+            {% endif %}
+          {% endwith %}
           <div class="info__fourth text-end">
             <a class="text-decoration-none" href="{% url 'movies:detail' movie.pk %}">{{ movie.title }} 정보 더보기 ></a>
           </div>

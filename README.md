@@ -55,6 +55,86 @@ def genre(request, genre):
         'genre': genre,
     }
     return render(request, 'movies/genre.html', context)
+
+def update(request, movie_id):
+    movie = Movie.objects.get(pk = movie_id)
+    image = MoviePhoto.objects.filter(movie_id=movie_id)
+    images = movie.moviephoto_set.all()
+    if request.method=="POST":
+        update_form = MovieForm(request.POST, request.FILES, instance=movie)
+        if update_form.is_valid():
+            update = update_form.save(commit=False)
+            update.user = request.user
+            update.save()
+            for img in request.FILES.getlist('image_movie'):
+                photo = MoviePhoto()
+                photo.movie = movie
+                photo.image_movie = img
+                photo.save()
+            images_to_delete = request.POST.getlist('delete_images')
+            for image_id in images_to_delete:
+                image = MoviePhoto.objects.get(pk=image_id)
+                image.delete()
+            return redirect('movies:detail', movie.pk)
+    else:
+        update_form = MovieForm(instance=movie)
+        image_form = MoviePhotoForm
+        movies_country = Movie.objects.all().order_by('country')
+        movies_genre = Movie.objects.all().order_by('genre')
+        magazines = Magazine.objects.all()
+    context = {
+        'magazines': magazines,
+        'movies_genre': movies_genre,
+        'movies_country': movies_country,
+        'update_form': update_form,
+        'image_form': image_form,
+        'movie': movie,
+        'images': images,
+    }
+    return render(request, 'movies/update.html', context)
+```
+
+### movies/update.html
+
+```html
+{% extends 'base.html' %}
+
+{% block style %}
+<style>
+  body {
+    margin: 5rem;
+  }
+</style>
+{% endblock style %}
+
+{% block content %}
+<form action="{% url 'movies:update' movie.pk %}" method="POST" enctype="multipart/form-data">
+  {% csrf_token %}
+  {% for field in update_form %}
+  <div class="input-group mb-3">
+    <span class="input-group-text" style = "width: 13rem;" id="{{ field.auto_id }}">{{ field.label }}</span>
+    {{ field }}
+  </div> 
+  {% endfor %}
+  <div class="mb-3">
+      <p class="mb-1">추가할 이미지</p>
+      {{ image_form }}
+    </div>
+    <p class="mb-1">삭제할 이미지</p>
+    <ul>
+      {% for image in images %}
+      <li>
+        <img src="{{ image.image_movie_thumbnail.url }}" alt="{{ image.image_movie }}" width="100px;">
+        <input type="checkbox" name="delete_images" value="{{ image.id }}" id="delete_images-{{ image.id }}">
+        <label for="delete_images-{{ image.id }}">{{ image.image_movie }}</label>
+      </li>
+      {% endfor %}
+    </ul>
+  <div class="d-grid gap-2 mb-2">
+    <input type="submit" class="btn btn-primary" value="UPDATE">
+  </div>
+</form>
+{% endblock content %}
 ```
 
 ### movies/index.html
@@ -90,3 +170,12 @@ def detail(request, magazine_id):
 ### 별점
 
 https://velog.io/@hellocdpa/220305-%EB%A6%AC%EB%B7%B0-%EB%B3%84%EC%A0%90-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0
+
+### 그래프
+
+https://wikidocs.net/124976
+
+## 검색 API
+
+https://whatisthenext.tistory.com/137
+https://vanillacreamdonut.tistory.com/124

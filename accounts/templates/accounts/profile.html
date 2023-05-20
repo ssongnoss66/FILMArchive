@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block style %}
 <style>
@@ -11,7 +12,11 @@
         {{ person.username }}님의 정보
     </div>
     <div class="card-body">
+        {% if person.image %}
         <img class="card-img-top" src="{{ person.image.url }}" alt="" style="width:150px; border-radius: 50%; border:5px solid var(--main-mango); padding: 0px;">
+        {% else %}
+        <img class="card-img-top" src="{% static 'ICON_CLR.png' %}" alt="" style="width:150px; border-radius: 50%; border:5px solid var(--main-mango); padding: 0px;">
+        {% endif %}
         <h5 class="card-title mt-2">{{ person.last_name }}{{ person.first_name }}</h5>
         <form id="follow-form" data-user-id="{{ person.pk }}">
             {% csrf_token %}
