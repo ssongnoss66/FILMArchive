@@ -17,8 +17,14 @@ import base64
 import json
 import urllib.parse
 import urllib.request
+import requests
+import os
+from dotenv import load_dotenv
+load_dotenv()
+MY_KEY = os.getenv('TMDB_KEY')
 
 # Create your views here.
+
 def index(request):
     # Review.objects.all().delete()
     # movie 평균 평점 갱신
@@ -174,29 +180,6 @@ def delete(request, movie_id):
     if request.user == movie.user:
         movie.delete()
     return redirect('movies:index')
-
-# def update(request, movie_id):
-#     movie = Movie.objects.get(pk = movie_id)
-#     if request.method=="POST":
-#         update_form = MovieForm(request.POST, request.FILES, instance=movie)
-#         if update_form.is_valid():
-#             update = update_form.save(commit=False)
-#             update.user = request.user
-#             update.save()
-#             return redirect('movies:detail', movie.pk)
-#     else:
-#         update_form = MovieForm(instance=movie)
-#         movies_country = Movie.objects.all().order_by('country')
-#         movies_genre = Movie.objects.all().order_by('genre')
-#         magazines = Magazine.objects.all()
-#     context = {
-#         'magazines': magazines,
-#         'movies_genre': movies_genre,
-#         'movies_country': movies_country,
-#         'update_form': update_form,
-#         'movie': movie,
-#     }
-#     return render(request, 'movies/update.html', context)
 
 def update(request, movie_id):
     movie = Movie.objects.get(pk = movie_id)
